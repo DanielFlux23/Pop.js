@@ -290,42 +290,6 @@ style(bloco){
   }
 }
 
-const animacoes = {
-  fade: (duration) => [
-    { opacity: 0 },
-    { opacity: 1 }
-  ],
-  
-  slide: {
-    up: (duration) => [
-      { transform: "translateY(50px)", opacity: 0 },
-      { transform: "translateY(0px)", opacity: 1 }
-    ],
-    down: (duration) => [
-      { transform: "translateY(-50px)", opacity: 0 },
-      { transform: "translateY(0px)", opacity: 1 }
-    ],
-    left: (duration) => [
-      { transform: "translateX(50px)", opacity: 0 },
-      { transform: "translateX(0px)", opacity: 1 }
-    ],
-    right: (duration) => [
-      { transform: "translateX(-50px)", opacity: 0 },
-      { transform: "translateX(0px)", opacity: 1 }
-    ]
-  },
-  
-  scale: (duration) => [
-    { transform: "scale(0.8)", opacity: 0 },
-    { transform: "scale(1)", opacity: 1 }
-  ],
-  
-  rotate: (duration) => [
-    { transform: "rotate(-10deg)", opacity: 0 },
-    { transform: "rotate(0deg)", opacity: 1 }
-  ]
-};
-
 
 /*
 {
