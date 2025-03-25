@@ -116,6 +116,64 @@ blocos: Um array com as chaves dos blocos que precisam ser atualizados. Se não 
 
 ``pop.show(['bloco1']); // Atualiza o bloco1 no DOM``
 
+5. animar
+
+O método animar é capaz de criar animação simples de forma rápida 
+
+bloco: o bloco em que se pretende animar
+
+config: configurações da animação
+```
+/*
+{
+  type: "rotate", // Tipo de animação (rotate, scale, fade, slide, bounce)
+  duration: 500, // Duração da animação (em ms)
+  easing: "ease-in-out", // Função de timing (opcional)
+  repeat: true, // Repetir a animação (opcional)
+  delay: 0, // Atraso antes de começar a animação (em ms, opcional)
+  direction: 40, // Valor específico da animação (pode ser -34, 1.2, etc, dependendo do tipo)
+}*/
+```
+
+6. mover(bloco, config={})
+
+O método mover é capaz de mover um elemento de forma razoavelmente complexa
+
+bloco: o bloco em que se pretende mover
+
+config: configurações da movimentação
+
+#### exemplo
+
+```
+pop.mover('box', {
+gravidade: { y: 0, ay: 2, delay: 30, },
+vento: { x: 0, ax: 2, delay: 30, maxX:320},
+
+});
+```
+
+7. evento(seletor, typeEvento, funcao)
+
+seletor: elemento que receberam o evento
+
+typeEvento: tipo do eventoeve(ex:click)
+
+funcao: função Callback, que será executada quando o evento acionar
+
+#### exemplo
+
+```
+pop.evento('#butao','click',() => {console.log('hello Word')})
+```
+
+8. remover(bloco)
+
+O método remover, retirar um elemento do DOM
+
+bloco: elementoe que se pretende remover
+
+
 Detalhamento do Funcionamento
 
 Criação de Elementos no DOM
