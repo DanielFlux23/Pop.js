@@ -39,7 +39,7 @@ Ou, se preferir, use um módulo ES6:
 ```javascript
 // Definindo os blocos de conteúdo com funções que geram conteúdo dinâmico.
 const pop = new Pop({
-    bloco1: () => '<h1>Conteúdo do Bloco 1</h1>',
+  bloco1: () => '<h1>Conteúdo do Bloco 1</h1>',
   bloco2: () => '<p>Conteúdo do Bloco 2</p>',
   $blocoEspecial: () => 'bloco2' // clonar o bloco2
 });
