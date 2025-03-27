@@ -260,6 +260,12 @@ style(bloco){
   }
   
   remover(bloco = '') {
+    if (bloco> 1) {
+      bloco.forEach((index,array) => {
+        document.getElementById(array[index]).remove() || `<span style='color:red;'>Error 2 com: ${bloco}</span>`;
+
+      } )
+    }
     document.getElementById(bloco).remove() || `<span style='color:red;'>Error 2 com: ${bloco}</span>`;
   }
   
