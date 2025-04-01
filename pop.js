@@ -62,6 +62,20 @@ class Pop {
     this.chaves = Object.keys(this.blocos);
     return this;
   }
+
+clone(blocoParaClona, nomeDoBloco) {
+    if (!this.blocos[blocoParaClona]) console.warn('parece que este bloco não existir: ' + blocoParaClona);
+    
+    const nome = nomeDoBloco || blocoParaClona;
+    // Inicializamos ou incrementamos o contador de clonagens de forma mais clara
+    const numeroDeClonagens = (this.clonagens[blocoParaClona] = (this.clonagens[blocoParaClona] || 0) + 1);
+    // Atualizamos a chave com o número de clonagens
+    const chave = `${nome}${numeroDeClonagens}`;
+    // Registramos a chave clonada
+    this.add(chave, this.blocos[blocoParaClona]);
+    this.init([chave], { text: this.blocos[blocoParaClona]() })
+  }
+
   // Objeto que gerencia as animações em fila para cada elemento
   
   animar(bloco, config = {}) {
