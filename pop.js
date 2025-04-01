@@ -153,35 +153,6 @@ class Pop {
     };
   }
   
-  /*mover(bloco, config = {}) {
-    const elemento = this.$$(bloco);
-    
-    if (!elemento) return console.error(`Elemento ${bloco} não encontrado`);
-    
-    let estado = { x: 0, y: 0 }; // Estado global do bloco
-    
-    Object.keys(config).forEach((chave) => {
-      const obj = config[chave];
-      
-      if (!obj || typeof obj !== 'object') return;
-      
-      // Definir valores padrão
-      obj.x = obj.x ?? 0;
-      obj.y = obj.y ?? 0;
-      obj.ax = obj.ax ?? 0;
-      obj.ay = obj.ay ?? 0;
-      obj.delay = obj.delay ?? 1000;
-      
-      setInterval(() => {
-        // Atualiza a posição global
-        estado.x += obj.ax;
-        estado.y += obj.ay;
-        
-        // Atualiza o estilo do elemento
-        elemento.style.transform = `translate(${estado.x}px, ${estado.y}px)`;
-      }, obj.delay);
-    });
-  }*/
   mover(bloco, config = {}) {
     
     const elemento = this.$$(bloco);
