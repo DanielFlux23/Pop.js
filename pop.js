@@ -39,6 +39,16 @@ class Pop {
     return this;
   }
   
+
+  /**
+   * permite adiciona blocos de forma mais flexível 
+   */
+  add(nome, callback) {
+    this.blocos[nome] = callback;
+    this.chaves = Object.keys(this.blocos);
+    return this;
+  }
+
   // Objeto que gerencia as animações em fila para cada elemento
   
   animar(bloco, config = {}) {
@@ -295,14 +305,3 @@ style(bloco){
     return this;
   }
 }
-
-
-/*
-{
-  type: "rotate", // Tipo de animação (rotate, scale, fade, slide, bounce)
-  duration: 500, // Duração da animação (em ms)
-  easing: "ease-in-out", // Função de timing (opcional)
-  repeat: true, // Repetir a animação (opcional)
-  delay: 0, // Atraso antes de começar a animação (em ms, opcional)
-  direction: 40, // Valor específico da animação (pode ser -34, 1.2, etc, dependendo do tipo)
-}*/
