@@ -2,6 +2,7 @@ class Pop {
   constructor(blocos = {}, opens = []) {
     this.blocos = blocos;
     this.chaves = Object.keys(blocos);
+    this.clonagens = {};
     this.animacoes = {};
     this.init(opens === 'initPop' ? this.chaves : opens);
     return this;
@@ -11,18 +12,33 @@ class Pop {
    * Inicializa e insere no DOM os blocos especificados, se ainda não existirem.
    */
   init(blocos = [], { text = '', data = null } = {}) {
-    for (const chave of blocos) {
-      if (!this.blocos[chave] || document.getElementById(chave)) continue;
+    for (let chave of blocos) {
+      let conteudo;
       
+      if (chave.includes('&')) {
+        // Se a chave tem "&", processamos de maneira diferente
+        const chaveAClona = chave.replace('&', '');
+        // Inicializamos ou incrementamos o contador de clonagens de forma mais clara
+        const numeroDeClonagens = (this.clonagens[chaveAClona] = (this.clonagens[chaveAClona] || 0) + 1);
+        // Utilizamos o operador de coalescência nula para garantir um valor não nulo para 'conteudo'
+        conteudo = text ?? this.blocos[chaveAClona](data);
+        
+        // Atualizamos a chave com o número de clonagens
+        chave = `${chaveAClona}${numeroDeClonagens}`;
+        
+        // Registramos a chave clonada
+        this.add(chave, this.blocos[chaveAClona]);
+      }
+      if (!this.blocos[chave] || document.getElementById(chave)) continue;
       const elemento = document.createElement('div');
       elemento.id = chave;
       
-      let conteudo;
       
       if (chave.includes('$')) {
         // Se a chave tem "$", processamos de maneira diferente
         conteudo = this.id(this.blocos[chave](data)); //this.blocos[chave];
-      } else {
+      }
+      else {
         // Caso normal
         conteudo = text || this.blocos[chave](data);
       }
@@ -38,8 +54,6 @@ class Pop {
     }
     return this;
   }
-  
-
   /**
    * permite adiciona blocos de forma mais flexível 
    */
@@ -48,7 +62,6 @@ class Pop {
     this.chaves = Object.keys(this.blocos);
     return this;
   }
-
   // Objeto que gerencia as animações em fila para cada elemento
   
   animar(bloco, config = {}) {
@@ -140,111 +153,111 @@ class Pop {
     };
   }
   
-/*mover(bloco, config = {}) {
-  const elemento = this.$$(bloco);
-  
-  if (!elemento) return console.error(`Elemento ${bloco} não encontrado`);
-  
-  let estado = { x: 0, y: 0 }; // Estado global do bloco
-  
-  Object.keys(config).forEach((chave) => {
-    const obj = config[chave];
+  /*mover(bloco, config = {}) {
+    const elemento = this.$$(bloco);
     
-    if (!obj || typeof obj !== 'object') return;
+    if (!elemento) return console.error(`Elemento ${bloco} não encontrado`);
     
-    // Definir valores padrão
-    obj.x = obj.x ?? 0;
-    obj.y = obj.y ?? 0;
-    obj.ax = obj.ax ?? 0;
-    obj.ay = obj.ay ?? 0;
-    obj.delay = obj.delay ?? 1000;
+    let estado = { x: 0, y: 0 }; // Estado global do bloco
     
-    setInterval(() => {
-      // Atualiza a posição global
-      estado.x += obj.ax;
-      estado.y += obj.ay;
+    Object.keys(config).forEach((chave) => {
+      const obj = config[chave];
       
-      // Atualiza o estilo do elemento
-      elemento.style.transform = `translate(${estado.x}px, ${estado.y}px)`;
-    }, obj.delay);
-  });
-}*/
-mover(bloco, config = {}) {
-  
-  const elemento = this.$$(bloco);
-  
-  if (!elemento) return console.error(`Elemento ${bloco} não encontrado`);
-  
-  let estado = { x: 0, y: 0 }; // Estado global do bloco
-  let pausado = false; // Controle de pausa
-  
-  Object.keys(config).forEach((chave) => {
-    const obj = config[chave];
+      if (!obj || typeof obj !== 'object') return;
+      
+      // Definir valores padrão
+      obj.x = obj.x ?? 0;
+      obj.y = obj.y ?? 0;
+      obj.ax = obj.ax ?? 0;
+      obj.ay = obj.ay ?? 0;
+      obj.delay = obj.delay ?? 1000;
+      
+      setInterval(() => {
+        // Atualiza a posição global
+        estado.x += obj.ax;
+        estado.y += obj.ay;
+        
+        // Atualiza o estilo do elemento
+        elemento.style.transform = `translate(${estado.x}px, ${estado.y}px)`;
+      }, obj.delay);
+    });
+  }*/
+  mover(bloco, config = {}) {
     
-    if (!obj || typeof obj !== 'object') return;
+    const elemento = this.$$(bloco);
     
-    // Definir valores padrão
-    obj.x = obj.x ?? 0;
-    obj.y = obj.y ?? 0;
-    obj.ax = obj.ax ?? 0;
-    obj.ay = obj.ay ?? 0;
-    obj.delay = obj.delay ?? 1000;
-    obj.minX = obj.minX ?? -Infinity;
-    obj.maxX = obj.maxX ?? Infinity;
-    obj.minY = obj.minY ?? -Infinity;
-    obj.maxY = obj.maxY ?? Infinity;
-    obj.friccao = obj.friccao ?? 1; // 1 = sem fricção, menor que 1 reduz a aceleração
-    obj.reset = obj.reset ?? false; // Se true, reseta a posição depois de um tempo
-    obj.pause = obj.pause ?? false; // Se true, pausa o movimento
+    if (!elemento) return console.error(`Elemento ${bloco} não encontrado`);
     
-    setInterval(() => {
-      if (pausado || obj.pause) return;
+    let estado = { x: 0, y: 0 }; // Estado global do bloco
+    let pausado = false; // Controle de pausa
+    
+    Object.keys(config).forEach((chave) => {
+      const obj = config[chave];
       
-      // Aplica aceleração com fricção
-      obj.ax *= obj.friccao;
-      obj.ay *= obj.friccao;
+      if (!obj || typeof obj !== 'object') return;
       
-      estado.x += obj.ax;
-      estado.y += obj.ay;
+      // Definir valores padrão
+      obj.x = obj.x ?? 0;
+      obj.y = obj.y ?? 0;
+      obj.ax = obj.ax ?? 0;
+      obj.ay = obj.ay ?? 0;
+      obj.delay = obj.delay ?? 1000;
+      obj.minX = obj.minX ?? -Infinity;
+      obj.maxX = obj.maxX ?? Infinity;
+      obj.minY = obj.minY ?? -Infinity;
+      obj.maxY = obj.maxY ?? Infinity;
+      obj.friccao = obj.friccao ?? 1; // 1 = sem fricção, menor que 1 reduz a aceleração
+      obj.reset = obj.reset ?? false; // Se true, reseta a posição depois de um tempo
+      obj.pause = obj.pause ?? false; // Se true, pausa o movimento
       
-      // Respeita os limites
-      estado.x = Math.max(obj.minX, Math.min(obj.maxX, estado.x));
-      estado.y = Math.max(obj.minY, Math.min(obj.maxY, estado.y));
-      
-      // Atualiza a posição do elemento
-      elemento.style.transform = `translate(${estado.x}px, ${estado.y}px)`;
-      
-      // Reseta a posição após 3 segundos se "reset" for true
-      if (obj.reset) {
-        setTimeout(() => {
-          estado.x = obj.x;
-          estado.y = obj.y;
-          elemento.style.transform = `translate(${estado.x}px, ${estado.y}px)`;
-        }, 3000);
-      }
-      
-    }, obj.delay);
-  });
-  
-  // Função para pausar e retomar
-  this.pausar = () => (pausado = true);
-  this.continuar = () => (pausado = false);
-}
-
-style(bloco){
-  return this.$$(bloco).style
-}
-
- evento(seletor, typeEvento, funcao) {
-  const elementos = document.querySelectorAll(seletor);
-  
-  if (elementos.length === 0) {
-    console.warn(`Nenhum elemento encontrado para o seletor: ${seletor}`);
-    return;
+      setInterval(() => {
+        if (pausado || obj.pause) return;
+        
+        // Aplica aceleração com fricção
+        obj.ax *= obj.friccao;
+        obj.ay *= obj.friccao;
+        
+        estado.x += obj.ax;
+        estado.y += obj.ay;
+        
+        // Respeita os limites
+        estado.x = Math.max(obj.minX, Math.min(obj.maxX, estado.x));
+        estado.y = Math.max(obj.minY, Math.min(obj.maxY, estado.y));
+        
+        // Atualiza a posição do elemento
+        elemento.style.transform = `translate(${estado.x}px, ${estado.y}px)`;
+        
+        // Reseta a posição após 3 segundos se "reset" for true
+        if (obj.reset) {
+          setTimeout(() => {
+            estado.x = obj.x;
+            estado.y = obj.y;
+            elemento.style.transform = `translate(${estado.x}px, ${estado.y}px)`;
+          }, 3000);
+        }
+        
+      }, obj.delay);
+    });
+    
+    // Função para pausar e retomar
+    this.pausar = () => (pausado = true);
+    this.continuar = () => (pausado = false);
   }
   
-  elementos.forEach(elemento => elemento.addEventListener(typeEvento, funcao));
-}
+  style(bloco) {
+    return this.$$(bloco).style
+  }
+  
+  evento(seletor, typeEvento, funcao) {
+    const elementos = document.querySelectorAll(seletor);
+    
+    if (elementos.length === 0) {
+      console.warn(`Nenhum elemento encontrado para o seletor: ${seletor}`);
+      return;
+    }
+    
+    elementos.forEach(elemento => elemento.addEventListener(typeEvento, funcao));
+  }
   
   /**
    * Obtém o conteúdo de um bloco, retornando uma mensagem caso não exista.
@@ -270,11 +283,11 @@ style(bloco){
   }
   
   remover(bloco = '') {
-    if (bloco> 1) {
-      bloco.forEach((index,array) => {
+    if (bloco > 1) {
+      bloco.forEach((index, array) => {
         document.getElementById(array[index]).remove() || `<span style='color:red;'>Error 2 com: ${bloco}</span>`;
-
-      } )
+        
+      })
     }
     document.getElementById(bloco).remove() || `<span style='color:red;'>Error 2 com: ${bloco}</span>`;
   }
