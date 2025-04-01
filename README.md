@@ -62,7 +62,7 @@ console.log(conteudoBloco1); // 'Conteúdo do Bloco 1'
 O construtor da classe recebe dois parâmetros:
 
 **blocos** (opcional): Um objeto que mapeia chaves para funções que retornam o conteúdo do bloco. Exemplo:
-```
+```javascript
 {
   'bloco1': () => 'Conteúdo do Bloco 1',
   'bloco2': () => 'Conteúdo do Bloco 2'
@@ -87,7 +87,7 @@ Este método inicializa e insere os blocos especificados no DOM. Caso o bloco ai
 
 #### Exemplo:
 
-`pop.init(['bloco1'], {text = 'meu texto', dado=[1,3]]);``
+`pop.init(['bloco1'], {text = 'meu texto', dado=[1,3]]);`
 
 #### 3. id(bloco)
 
@@ -100,7 +100,7 @@ Se bloco for um array[chave, funcao], o método id tenta combinar o conteúdo da
 
 #### Exemplo:
 
-```
+```javascript
 const conteudo = pop.id('bloco1');
 console.log(conteudo); // 'Conteúdo do Bloco 1
 ```
@@ -114,7 +114,7 @@ blocos: Um array com as chaves dos blocos que precisam ser atualizados. Se não 
 
 #### Exemplo:
 
-``pop.show(['bloco1']); // Atualiza o bloco1 no DOM``
+`pop.show(['bloco1']); // Atualiza o bloco1 no DOM`
 
 5. animar
 
@@ -123,7 +123,7 @@ O método animar é capaz de criar animação simples de forma rápida
 bloco: o bloco em que se pretende animar
 
 config: configurações da animação
-```
+```javascript
 /*
 {
   type: "rotate", // Tipo de animação (rotate, scale, fade, slide, bounce)
@@ -145,7 +145,7 @@ config: configurações da movimentação
 
 #### exemplo
 
-```
+```javascript
 pop.mover('box', {
 gravidade: { y: 0, ay: 2, delay: 30, },
 vento: { x: 0, ax: 2, delay: 30, maxX:320},
@@ -163,7 +163,7 @@ funcao: função Callback, que será executada quando o evento acionar
 
 #### exemplo
 
-```
+```javascript
 pop.evento('#butao','click',() => {console.log('hello Word')})
 ```
 
@@ -193,7 +193,7 @@ Exemplo:
 
 Se tivermos o bloco:
 
-```
+```javascript
 card:() => `bom dia`,
 $blocoReferenciado: () => 'card'
 ```
@@ -202,7 +202,7 @@ Ao inicializar $blocoReferenciado, o conteúdo será o do bloco associada a ele.
 Se a chave começar com $, a classe irá buscar a função associada à chave e usá-la como uma referência para gerar o conteúdo ou cronar um outro bloco.
 
 Caso 1: Bloco especial com função
-```
+```javascript
 math:() => `<h1>cálculo matemático</h1>`,
 $blocoFuncao: () => ['math', ()=> Math.random() > 0.5 ? 'Sim' : 'Não'] // ['card',funcaoAnonima]
 ```
@@ -214,7 +214,7 @@ Manipulação de Conteúdo Dinâmico
 Se o conteúdo de um bloco for alterado, o método show irá atualizar o bloco no DOM com o novo conteúdo. Caso o bloco ainda não tenha sido inserido, ele será inicializado automaticamente.
 
 Exemplo
-```
+```javascript
 <script src="pop.js"></script>
 <script>
   const pop = new Pop({
