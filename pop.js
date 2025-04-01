@@ -246,7 +246,7 @@ class Pop {
   }
   
   $(elemento) {
-    return document.getSelection(elemento)
+    return document.querySelector(elemento)
   }
   
   $$(elemento) {
