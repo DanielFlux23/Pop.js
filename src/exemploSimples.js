@@ -1,3 +1,4 @@
+
 let name = prompt('qual é o seu nome?') || '';
 let clicks = 0;
 const pop = new Pop({

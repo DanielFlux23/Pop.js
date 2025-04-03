@@ -1,0 +1,14 @@
+/exemplos/
+
+# Sistemas operacionais
+.DS_Store  # macOS
+Thumbs.db  # Windows
+
+# IDEs e editores
+.vscode/
+.idea/
+*.swp  # Arquivos temporários do Vim
+
+# Logs e temporários
+*.log
+*.tmp
