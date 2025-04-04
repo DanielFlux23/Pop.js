@@ -15,6 +15,9 @@
   ],
   "author": "DanielFlux23",
   "license": "MIT",
+  "devDependencies": {
+  "semantic-release": "^21.0.0"
+},
   "bugs": {
     "url": "https://github.com/DanielFlux23/Pop.js/issues"
   },
