@@ -4,24 +4,16 @@
 
 > “Criado por pura preguiça de aprender React. E funcionou.”
 
-## 📜 Índice
-
-1. [Características](#-características)
-2. [Instalação](#-instalação)
-3. [Uso](#-uso)
-4. [Contribuição](#-contribuição)
-5. [Licença](#-licença)
-
 ---
-# 🔥 Características
+#  Características
  Pontos Fortes
 
-- ✅ Simplicidade – O código é direto ao ponto e fácil de entender.
-- ✅ Flexibilidade – Suporta tanto strings quanto elementos do DOM, o que dá mais liberdade para criar componentes dinâmicos.
-- ✅ Autoinicialização – A classe já carrega os blocos definidos na criação, o que facilita a configuração inicial.
-- ✅ Encadeamento – O retorno this permite chamadas encadeadas, algo que melhora a fluidez do código.
+- Simplicidade – O código é direto ao ponto e fácil de entender.
+- Flexibilidade – Suporta tanto strings quanto elementos do DOM, o que dá mais liberdade para criar componentes dinâmicos.
+- Autoinicialização – A classe já carrega os blocos definidos na criação, o que facilita a configuração inicial.
+- Encadeamento – O retorno this permite chamadas encadeadas, algo que melhora a fluidez do código.
 
-# 🛠 Instalação
+#  Instalação
 
 Usando um arquivo <script>:
 
