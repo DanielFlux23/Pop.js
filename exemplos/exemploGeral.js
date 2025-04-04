@@ -63,3 +63,17 @@ pop.style('novoBloco').background = 'yellow';
 
 /*observando uma variáve*/
 pop.setVar('teste',() => console.log('hello word'))
+
+/*const state = pop.setVar({ text: "hello Word!" });
+
+Pop.new({
+  id: "exemplo",
+  html: `<div><p>{{msg}}</p><button>Clique</button></div>`,
+  fn: (el) => {
+    el.querySelector("button").onclick = () => {
+      state.msg = "Você clicou!";
+    };
+  },
+  bind: { msg: () => state.msg }
+}).show("#app");
+*/

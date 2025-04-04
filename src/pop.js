@@ -66,16 +66,34 @@ class Pop {
   }
   
   setVar(nomeVariavel, callback){
-
   Object.defineProperty(this.set, nomeVariavel, {
   get() {
     return this._valor;
   },
   set(novoValor) {
+    console.log([nomeVariavel])
+    //[nomeVariavel]=this.set[nomeVariavel]
     callback()
   }
 });
+return this.set;
   }
+  
+  setShow(nomeVariavel,blocos) {
+  const mythis = this;
+
+  Object.defineProperty(this.set, nomeVariavel, {
+    get() {
+      return this._valor;
+    },
+    set(novoValor) {
+      console.log(mythis)
+     // mythis.show([blocos])
+    }
+  });
+  
+
+}
 
 clone(blocoParaClona, nomeDoBloco) {
     if (!this.blocos[blocoParaClona]) console.warn('parece que este bloco não existir: ' + blocoParaClona);
@@ -317,3 +335,10 @@ clone(blocoParaClona, nomeDoBloco) {
     return this;
   }
 }
+
+const state = () => {
+ // this.show([bloco])
+  return obj;
+}
+
+let obj = {};

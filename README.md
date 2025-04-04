@@ -55,177 +55,286 @@ pop.show(['bloco1']);
 const conteudoBloco1 = pop.id('bloco1');
 console.log(conteudoBloco1); // 'Conteúdo do Bloco 1'
 ```
-### Métodos
+---
 
-`constructor(blocos = {}, opens = [])`
+### 1. constructor(blocos = {}, opens = [])
 
-O construtor da classe recebe dois parâmetros:
+**Para que serve**  
+Inicializa a instância da classe Pop. Pode também já iniciar os blocos definidos.
 
-**blocos** (opcional): Um objeto que mapeia chaves para funções que retornam o conteúdo do bloco. Exemplo:
+**Argumentos**  
+- `blocos`: Objeto com chaves representando blocos e valores sendo funções que retornam HTML ou elementos.  
+- `opens`: Array de blocos a serem inseridos no DOM automaticamente. Se `opens === 'initPop'`, todos os blocos serão iniciados.
+
+**Retorno**  
+Instância da classe `Pop`.
+
+**Exemplo**
+```javascript
+const pop = new Pop({
+  header: () => '<h1>Hello</h1>'
+}, ['header']);
+```
+
+---
+
+### 2. init(blocos = [], { text = '', data = null } = {})
+
+**Para que serve**  
+Inicializa e insere no DOM os blocos especificados, se ainda não existirem.
+
+**Argumentos**  
+- `blocos`: Array de chaves dos blocos.  
+- `text`: (Opcional) Texto fixo para substituir o conteúdo do bloco.  
+- `data`: (Opcional) Dados a serem passados para os blocos.
+
+**Retorno**  
+Instância da classe `Pop`.
+
+**Exemplo**
+```javascript
+pop.init(['header'], { text: 'Substituir HTML' });
+```
+
+---
+
+### 3. id(bloco)
+
+**Para que serve**  
+Obtém o conteúdo de um bloco.
+
+**Argumentos**  
+- `bloco`: String da chave, ou array `[chave, funcaoExtra]`.
+
+**Retorno**  
+Conteúdo HTML ou resultado da função.
+
+**Exemplo**
+```javascript
+const html = pop.id('header');
+```
+
+---
+
+### 4. show(blocos = [])
+
+**Para que serve**  
+Atualiza o conteúdo dos blocos renderizados. Inicializa se não existir.
+
+**Argumentos**  
+- `blocos`: (Opcional) Array com nomes dos blocos. Se omitido, atualiza todos.
+
+**Retorno**  
+Instância da classe `Pop`.
+
+**Exemplo**
+```javascript
+pop.show(['header']);
+```
+
+---
+
+### 5. animar(bloco, config)
+
+**Para que serve**  
+Aplica animações encadeadas no bloco especificado.
+
+**Argumentos**  
+- `bloco`: Id do bloco.  
+- `config`: Objeto com opções de animação:
 ```javascript
 {
-  'bloco1': () => 'Conteúdo do Bloco 1',
-  'bloco2': () => 'Conteúdo do Bloco 2'
+  type: 'slide',      // 'rotate' | 'fade' | 'slide' | 'bounce' | 'scale'
+  duration: 500,
+  easing: 'ease-in-out',
+  delay: 0,
+  direction: 'up'     // depende do tipo
 }
 ```
-**opens** (opcional): Um array de chaves de blocos a serem inicializados no DOM. Se não for fornecido, será nenhum bloco será inicializado. Caso seja passado como 'initPop', todos os blocos serão automaticamente inicializados.
 
+**Retorno**  
+Nenhum.
 
-#### Exemplo:
-
-`const pop = new Pop(blocos, ['bloco1']);`
-
-#### 2. init(blocos = [], { text = '', data=null} = {})
-
-Este método inicializa e insere os blocos especificados no DOM. Caso o bloco ainda não tenha sido inserido, ele será criado.
-
-**blocos**: Um array com as chaves dos blocos a serem inicializados.
-
-**text** (opcional): Texto que pode ser usado para o conteúdo do bloco, caso você precise de uma forma rápida de atualizar o texto de um bloco sem precisa de uma variável 
-
-**data** : permite enviar dados para os blocos
-
-#### Exemplo:
-
-`pop.init(['bloco1'], {text = 'meu texto', dado=[1,3]]);`
-
-#### 3. id(bloco)
-
-Este método permite acessar o conteúdo de um bloco específico.
-
-Se bloco for uma chave simples (string), o método retorna o conteúdo gerado pela função associada.
-
-Se bloco for um array[chave, funcao], o método id tenta combinar o conteúdo da chaves com o que a função gerar, retornando o resultado concatenado.
-
-
-#### Exemplo:
-
+**Exemplo**
 ```javascript
-const conteudo = pop.id('bloco1');
-console.log(conteudo); // 'Conteúdo do Bloco 1
+pop.animar('box', { type: 'rotate', direction: 90 });
 ```
 
-4. show(blocos = [])
+---
 
-O método show atualiza o conteúdo dos blocos existentes no DOM. Se um bloco não existir, ele será inicializado.
+### 6. mover(bloco, config = {})
 
-blocos: Um array com as chaves dos blocos que precisam ser atualizados. Se não for fornecido, todos os blocos definidos inicialmente serão atualizados.
+**Para que serve**  
+Move dinamicamente o elemento com base em física simples.
 
-
-#### Exemplo:
-
-`pop.show(['bloco1']); // Atualiza o bloco1 no DOM`
-
-5. animar
-
-O método animar é capaz de criar animação simples de forma rápida 
-
-bloco: o bloco em que se pretende animar
-
-config: configurações da animação
+**Argumentos**  
+- `bloco`: Id do bloco.  
+- `config`: Objeto com múltiplos vetores de força:
 ```javascript
-/*
 {
-  type: "rotate", // Tipo de animação (rotate, scale, fade, slide, bounce)
-  duration: 500, // Duração da animação (em ms)
-  easing: "ease-in-out", // Função de timing (opcional)
-  repeat: true, // Repetir a animação (opcional)
-  delay: 0, // Atraso antes de começar a animação (em ms, opcional)
-  direction: 40, // Valor específico da animação (pode ser -34, 1.2, etc, dependendo do tipo)
-}*/
+  vento: { ax: 2, delay: 30, maxX: 300 },
+  gravidade: { ay: 1, delay: 30 }
+}
 ```
 
-6. mover(bloco, config={})
+**Retorno**  
+Nenhum diretamente. Adiciona `pop.pausar()` e `pop.continuar()`.
 
-O método mover é capaz de mover um elemento de forma razoavelmente complexa
-
-bloco: o bloco em que se pretende mover
-
-config: configurações da movimentação
-
-#### exemplo
-
+**Exemplo**
 ```javascript
 pop.mover('box', {
-gravidade: { y: 0, ay: 2, delay: 30, },
-vento: { x: 0, ax: 2, delay: 30, maxX:320},
-
+  vento: { ax: 2, delay: 30, maxX: 300 },
+  gravidade: { ay: 1, delay: 30 }
 });
 ```
 
-7. evento(seletor, typeEvento, funcao)
+---
 
-seletor: elemento que receberam o evento
+### 7. evento(seletor, tipo, funcao)
 
-typeEvento: tipo do eventoeve(ex:click)
+**Para que serve**  
+Adiciona ouvintes de eventos em elementos DOM.
 
-funcao: função Callback, que será executada quando o evento acionar
+**Argumentos**  
+- `seletor`: String do seletor CSS.  
+- `tipo`: Tipo do evento (ex: `"click"`).  
+- `funcao`: Função de callback.
 
-#### exemplo
-
+**Exemplo**
 ```javascript
-pop.evento('#butao','click',() => {console.log('hello Word')})
+pop.evento('#btn', 'click', () => alert('Clicado!'));
 ```
 
-8. remover(bloco)
+---
 
-O método remover, retirar um elemento do DOM
+### 8. remover(bloco)
 
-bloco: elementoe que se pretende remover
+**Para que serve**  
+Remove elementos do DOM por id.
 
+**Argumentos**  
+- `bloco`: String ou array com ids.
 
-Detalhamento do Funcionamento
-
-Criação de Elementos no DOM
-
-Quando um bloco é inicializado, o método init cria um div com o id correspondente à chave do bloco. O conteúdo do bloco é inserido como o conteúdo HTML do elemento.
-
-Se o conteúdo do bloco for um elemento HTML, ele será adicionado diretamente.
-
-Caso contrário, o conteúdo será tratado como uma string e inserido diretamente no innerHTML(ou processada em casos especiais ).
-
-
-### Blocos com Chaves Especiais ($)
-
-Blocos com o símbolo $ não são tratados como HTML. Em vez disso, o conteúdo dessas chaves é um referenciador ou cronador. Ou seja, o bloco referenciado será usado para referenciar o conteúdo de outro bloco, como uma espécie de "atalho" ou função.
-
-Exemplo:
-
-Se tivermos o bloco:
-
+**Exemplo**
 ```javascript
-card:() => `bom dia`,
-$blocoReferenciado: () => 'card'
+pop.remover('box');
 ```
-Ao inicializar $blocoReferenciado, o conteúdo será o do bloco associada a ele.
 
-Se a chave começar com $, a classe irá buscar a função associada à chave e usá-la como uma referência para gerar o conteúdo ou cronar um outro bloco.
+---
 
-Caso 1: Bloco especial com função
+### 9. add(nome, callback)
+
+**Para que serve**  
+Adiciona dinamicamente um novo bloco.
+
+**Argumentos**  
+- `nome`: Nome da chave do bloco.  
+- `callback`: Função que retorna HTML ou elemento.
+
+**Retorno**  
+Instância da classe `Pop`.
+
+---
+
+### 10. setVar(nomeVariavel, callback)
+
+**Para que serve**  
+Cria uma variável observável. Executa um callback sempre que seu valor mudar.
+
+**Argumentos**  
+- `nomeVariavel`: Nome da variável dentro de `pop.set`.  
+- `callback`: Função a ser chamada no `set`.
+
+**Exemplo**
 ```javascript
-math:() => `<h1>cálculo matemático</h1>`,
-$blocoFuncao: () => ['math', ()=> Math.random() > 0.5 ? 'Sim' : 'Não'] // ['card',funcaoAnonima]
+pop.setVar('contador', () => console.log('Mudou!'));
+pop.set.contador = 42;
 ```
-`// <h1>cálculo matemático</h1>Sim`
-Isso fará com que cada vez que o bloco seja acessado, ele execute a função que retorna um valor dinâmico. e depois concatena com o bloco referenciado
 
-Manipulação de Conteúdo Dinâmico
+---
 
-Se o conteúdo de um bloco for alterado, o método show irá atualizar o bloco no DOM com o novo conteúdo. Caso o bloco ainda não tenha sido inserido, ele será inicializado automaticamente.
+### 11. clone(blocoOriginal, nomeDoClone)
 
-Exemplo
+**Para que serve**  
+Cria uma cópia de um bloco existente.
+
+**Argumentos**  
+- `blocoOriginal`: Nome do bloco base.  
+- `nomeDoClone`: (Opcional) Nome para o clone.
+
+**Exemplo**
 ```javascript
+pop.clone('card', 'cardNovo');
+```
+
+---
+
+### 12. $(seletor) & $$(id)
+
+**Para que serve**  
+Atalhos para `document.querySelector` e `getElementById`.
+
+**Exemplo**
+```javascript
+pop.$('#minhaDiv').innerHTML = 'Oi!';
+```
+
+---
+
+### 13. style(bloco)
+
+**Para que serve**  
+Retorna o objeto `style` de um bloco.
+
+**Exemplo**
+```javascript
+pop.style('box').backgroundColor = 'red';
+```
+
+---
+
+## Blocos com `$` e `&`
+
+- **Chave com `$`**: Interpreta o valor retornado como uma referência a outro bloco.  
+  Exemplo:
+  ```javascript
+  card: () => 'Oi!',
+  $ref: () => 'card'
+  ```
+
+- **Chave com `&`**: Indica que o bloco será clonado automaticamente.  
+  ```javascript
+  pop.init(['card&']); // gera 'card1', 'card2'...
+  ```
+
+---
+
+## Composição com Funções
+
+Blocos podem ser arrays com `[chave, funcaoExtra]` para conteúdo dinâmico:
+```javascript
+['math', () => Math.random() > 0.5 ? 'Sim' : 'Não']
+```
+Retorna:
+```
+Conteúdo de math + 'Sim' ou 'Não'
+```
+
+---
+
+## Exemplo Completo
+```html
 <script src="pop.js"></script>
 <script>
-  const pop = new Pop({
-    header: () => '<h1>Bem-vindo ao Pop.js!</h1>',
-    content: () => '<p>Isso é um exemplo de uso.</p>',
-  }, ['header']);
+const pop = new Pop({
+  header: () => '<h1>Pop.js</h1>',
+  content: () => '<p>Conteúdo inicial</p>',
+  $referencia: () => 'header'
+}, ['header']);
 
-  // Atualizar o conteúdo depois de 3 segundos
-  setTimeout(() => pop.show(['content']), 3000);
+setTimeout(() => pop.show(['content']), 2000);
 </script>
-```
+``` 
 ## 🧑‍💻 Contribuição
 
 Se você quiser contribuir com o Pop.js, faça um fork deste repositório, faça suas alterações e envie um pull request. Fique à vontade para sugerir melhorias, novos métodos ou até funcionalidades incríveis que você acha que o Pop.js deveria ter!
