@@ -2,6 +2,7 @@ class Pop {
   constructor(blocos = {}, opens = []) {
     this.blocos = blocos;
     this.chaves = Object.keys(blocos);
+    this.set = {}; // variáveis em observação
     this.clonagens = {};
     this.animacoes = {};
     this.init(opens === 'initPop' ? this.chaves : opens);
@@ -61,6 +62,27 @@ class Pop {
     this.blocos[nome] = callback;
     this.chaves = Object.keys(this.blocos);
     return this;
+  }
+
+  /**
+   * permite adiciona blocos de forma mais flexível 
+   */
+  add(nome, callback) {
+    this.blocos[nome] = callback;
+    this.chaves = Object.keys(this.blocos);
+    return this;
+  }
+  
+  setVar(nomeVariavel, callback){
+
+  Object.defineProperty(this.set, nomeVariavel, {
+  get() {
+    return this._valor;
+  },
+  set(novoValor) {
+    callback()
+  }
+});
   }
 
 clone(blocoParaClona, nomeDoBloco) {
