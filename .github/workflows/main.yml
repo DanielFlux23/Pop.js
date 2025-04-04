@@ -1,0 +1,31 @@
+name: Release Automation
+
+on:
+  push:
+    branches:
+      - main  # Roda apenas na branch principal
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Instalar dependências
+        run: npm install
+
+      - name: Configurar Git para commits automáticos
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions@github.com"
+
+      - name: Rodar release automático
+        run: npx semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
