@@ -60,3 +60,6 @@ pop.clone('blocoSimples', 'myblocoSimples');
 
 // Modifica o estilo do novo bloco (fundo amarelo)
 pop.style('novoBloco').background = 'yellow';
+
+/*observando uma variáve*/
+pop.setVar('teste',() => console.log('hello word'))
