@@ -1,0 +1,22 @@
+{
+  "name": "pop",
+  "version": "1.0.0",
+  "description": "**Pop.js** é uma biblioteca leve e flexível para manipulação dinâmica do DOM, permitindo adicionar e atualizar blocos HTML de maneira simples e sem complicação.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DanielFlux23/Pop.js.git"
+  },
+  "keywords": [
+    "pop.js"
+  ],
+  "author": "DanielFlux23",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/DanielFlux23/Pop.js/issues"
+  },
+  "homepage": "https://github.com/DanielFlux23/Pop.js#readme"
+}
