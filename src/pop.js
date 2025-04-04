@@ -55,14 +55,6 @@ class Pop {
     }
     return this;
   }
-  /**
-   * permite adiciona blocos de forma mais flexível 
-   */
-  add(nome, callback) {
-    this.blocos[nome] = callback;
-    this.chaves = Object.keys(this.blocos);
-    return this;
-  }
 
   /**
    * permite adiciona blocos de forma mais flexível 
