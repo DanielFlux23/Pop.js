@@ -1,5 +1,5 @@
 {
-  "name": "pop",
+  "name": "popjs",
   "version": "1.0.0",
   "description": "**Pop.js** é uma biblioteca leve e flexível para manipulação dinâmica do DOM, permitindo adicionar e atualizar blocos HTML de maneira simples e sem complicação.",
   "main": "index.js",
