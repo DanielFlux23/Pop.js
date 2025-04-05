@@ -4,9 +4,8 @@
 
 > “Criado por pura preguiça de aprender React. E funcionou.”
 
----
+
 #  Características
- Pontos Fortes
 
 - Simplicidade – O código é direto ao ponto e fácil de entender.
 - Flexibilidade – Suporta tanto strings quanto elementos do DOM, o que dá mais liberdade para criar componentes dinâmicos.
