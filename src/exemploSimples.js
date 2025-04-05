@@ -9,7 +9,12 @@ const pop = new Pop({
   butao: () => `<h3>+1<h3>`
 })
 
-pop.init(['titulo', 'time', 'contador', 'butao'])
+pop.init(['titulo', 'time', 'contador', 'butao'], {
+  onRender: (el, chave) => {
+    el.style.border = '2px dashed blue';
+    //console.log(`Bloco ${chave} foi renderizado`, el);
+  }
+})
 
 //state.name=3
 /*const state = pop.setShow('name','titulo');

@@ -70,7 +70,7 @@ const pop = new Pop({
 
 ---
 
-### 2. init(blocos = [], { text = '', data = null } = {})
+### 2. init(blocos = [], { text = '', data = null, onRender = null, target = null} = {})
 
 **Para que serve**  
 Inicializa e insere no DOM os blocos especificados, se ainda não existirem.
@@ -79,13 +79,23 @@ Inicializa e insere no DOM os blocos especificados, se ainda não existirem.
 - `blocos`: Array de chaves dos blocos.  
 - `text`: (Opcional) Texto fixo para substituir o conteúdo do bloco.  
 - `data`: (Opcional) Dados a serem passados para os blocos.
+- `onRender` (opcional): Função executada logo após o bloco ser inserido no DOM. Recebe dois argumentos: o elemento inserido e a chave original do bloco.
+- `target` (opcional): Elemento ou seletor CSS onde o bloco será inserido. Por padrão, é document.body.
 
 **Retorno**  
 Instância da classe `Pop`.
 
 **Exemplo**
 ```javascript
-pop.init(['header'], { text: 'Substituir HTML' });
+pop.init(['card'], {
+  data: { nome: 'Dani' },
+  text: 'Substituir HTML',
+  target: '#container',
+  onRender: (el, chave) => {
+    el.style.border = '2px dashed blue';
+  }
+});
+
 ```
 
 ---

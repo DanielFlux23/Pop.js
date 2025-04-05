@@ -1,101 +1,147 @@
 class Pop {
   constructor(blocos = {}, opens = []) {
-    this.blocos = blocos;
-    this.chaves = Object.keys(blocos);
-    this.set = {}; // variáveis em observação
-    this.clonagens = {};
-    this.animacoes = {};
+    this.blocos = blocos; // Mapeamento de nomes para funções de renderização
+    this.chaves = Object.keys(blocos); // Todas as chaves iniciais
+    this.set = {}; // Armazena variáveis observáveis
+    this.clonagens = {}; // Controla duplicações de blocos
+    this.animacoes = {}; // Gerencia animações em fila
+    
+    // Inicializa blocos, dependendo do valor de 'opens'
     this.init(opens === 'initPop' ? this.chaves : opens);
+    
     return this;
   }
   
   /**
    * Inicializa e insere no DOM os blocos especificados, se ainda não existirem.
    */
-  init(blocos = [], { text = '', data = null } = {}) {
+  init(blocos = [], { text = '', data = null,force = false, target = document.body, onRender = null } = {}) {
     for (let chave of blocos) {
       let conteudo;
       
+      // Caso a chave seja um clone (ex: 'box&')
       if (chave.includes('&')) {
-        // Se a chave tem "&", processamos de maneira diferente
-        const chaveAClona = chave.replace('&', '');
-        // Inicializamos ou incrementamos o contador de clonagens de forma mais clara
-        const numeroDeClonagens = (this.clonagens[chaveAClona] = (this.clonagens[chaveAClona] || 0) + 1);
-        // Utilizamos o operador de coalescência nula para garantir um valor não nulo para 'conteudo'
-        conteudo = text ?? this.blocos[chaveAClona](data);
-        
-        // Atualizamos a chave com o número de clonagens
-        chave = `${chaveAClona}${numeroDeClonagens}`;
-        
-        // Registramos a chave clonada
-        this.add(chave, this.blocos[chaveAClona]);
+        const chaveBase = chave.replace('&', '');
+        const count = (this.clonagens[chaveBase] = (this.clonagens[chaveBase] || 0) + 1);
+        conteudo = text ?? this.blocos[chaveBase](data);
+        chave = `${chaveBase}${count}`;
+        this.add(chave, this.blocos[chaveBase]);
       }
+      
+      // Se já foi inserido ou o bloco não existe, pula
       if (!this.blocos[chave] || document.getElementById(chave)) continue;
+      
       const elemento = document.createElement('div');
       elemento.id = chave;
       
-      
       if (chave.includes('$')) {
-        // Se a chave tem "$", processamos de maneira diferente
-        conteudo = this.id(this.blocos[chave](data)); //this.blocos[chave];
-      }
-      else {
-        // Caso normal
+        // Caso especial: referência a outro bloco
+        conteudo = this.id(this.blocos[chave](data));
+      } else {
         conteudo = text || this.blocos[chave](data);
       }
       
-      // Adiciona o conteúdo ao elemento
+      // Adiciona conteúdo ao elemento
       if (conteudo instanceof HTMLElement) {
         elemento.appendChild(conteudo);
       } else {
         elemento.innerHTML = conteudo;
       }
       
-      document.body.appendChild(elemento);
+      target.appendChild(elemento);
+      if(onRender) onRender(elemento,chave); // função que executar durante a renderização
     }
+    
     return this;
   }
-
+  init(blocos = [], { text = '', data = null, force = false, target = document.body, onRender = null } = {}) {
+  for (let chave of blocos) {
+    let conteudo;
+    const idExistente = document.getElementById(chave);
+    
+    if (!this.blocos[chave] && !chave.includes('&')) continue;
+    
+    if (idExistente && !force) continue;
+    if (idExistente && force) idExistente.remove();
+    
+    let chaveOriginal = chave;
+    
+    if (chave.includes('&')) {
+      const chaveAClona = chave.replace('&', '');
+      const numero = (this.clonagens[chaveAClona] = (this.clonagens[chaveAClona] || 0) + 1);
+      chave = `${chaveAClona}${numero}`;
+      this.add(chave, this.blocos[chaveAClona]);
+      conteudo = text ?? this.blocos[chaveAClona](data);
+    } else if (chave.includes('$')) {
+      conteudo = this.id(this.blocos[chave](data));
+    } else {
+      conteudo = text || this.blocos[chave](data);
+    }
+    
+    const elemento = document.createElement('div');
+    elemento.id = chave;
+    
+    if (conteudo instanceof HTMLElement) {
+      elemento.appendChild(conteudo);
+    } else {
+      elemento.innerHTML = conteudo;
+    }
+    
+    target.appendChild(elemento);
+    if (onRender) onRender(elemento, chaveOriginal);
+  }
+  
+  return this;
+}
   /**
    * permite adiciona blocos de forma mais flexível 
    */
-  add(nome, callback) {
-    this.blocos[nome] = callback;
+  add(nomeOuObj, callback) {
+    if (typeof nomeOuObj === 'object') {
+      for (let chave in nomeOuObj) {
+        this.blocos[chave] = nomeOuObj[chave];
+      }
+    } else {
+      if (this.blocos[nomeOuObj]) {
+        console.warn(`Bloco '${nomeOuObj}' já existe. Será sobrescrito.`);
+      }
+      this.blocos[nomeOuObj] = callback;
+    }
     this.chaves = Object.keys(this.blocos);
     return this;
   }
   
-  setVar(nomeVariavel, callback){
-  Object.defineProperty(this.set, nomeVariavel, {
-  get() {
-    return this._valor;
-  },
-  set(novoValor) {
-    console.log([nomeVariavel])
-    //[nomeVariavel]=this.set[nomeVariavel]
-    callback()
-  }
-});
-return this.set;
+  setVar(nomeVariavel, callback) {
+    Object.defineProperty(this.set, nomeVariavel, {
+      get() {
+        return this._valor;
+      },
+      set(novoValor) {
+        console.log([nomeVariavel])
+        //[nomeVariavel]=this.set[nomeVariavel]
+        callback()
+      }
+    });
+    return this.set;
   }
   
-  setShow(nomeVariavel,blocos) {
-  const mythis = this;
-
-  Object.defineProperty(this.set, nomeVariavel, {
-    get() {
-      return this._valor;
-    },
-    set(novoValor) {
-      console.log(mythis)
-     // mythis.show([blocos])
-    }
-  });
+  setShow(nomeVariavel, blocos) {
+    const mythis = this;
+    
+    Object.defineProperty(this.set, nomeVariavel, {
+      get() {
+        return this._valor;
+      },
+      set(novoValor) {
+        console.log(mythis)
+        // mythis.show([blocos])
+      }
+    });
+    
+    
+  }
   
-
-}
-
-clone(blocoParaClona, nomeDoBloco) {
+  clone(blocoParaClona, nomeDoBloco) {
     if (!this.blocos[blocoParaClona]) console.warn('parece que este bloco não existir: ' + blocoParaClona);
     
     const nome = nomeDoBloco || blocoParaClona;
@@ -107,7 +153,7 @@ clone(blocoParaClona, nomeDoBloco) {
     this.add(chave, this.blocos[blocoParaClona]);
     this.init([chave], { text: this.blocos[blocoParaClona]() })
   }
-
+  
   // Objeto que gerencia as animações em fila para cada elemento
   
   animar(bloco, config = {}) {
@@ -280,17 +326,30 @@ clone(blocoParaClona, nomeDoBloco) {
    * Obtém o conteúdo de um bloco, retornando uma mensagem caso não exista.
    */
   id(bloco) {
-    if (bloco.includes('$')) {
-      return this.blocos[this.blocos[bloco]()]() || `<span style='color:red;'>Error 2 com: ${bloco}</span>`;
+    try {
+      if (typeof bloco === 'string') {
+        if (bloco.includes('$')) {
+          const chave = this.blocos[bloco]?.();
+          return this.blocos[chave]?.() || this._erro(bloco);
+        }
+        return this.blocos[bloco]?.() || this._erro(bloco);
+      }
+      
+      if (Array.isArray(bloco)) {
+        const [chave, fn] = bloco;
+        return (this.blocos[chave]?.() || '') + (fn?.() || '');
+      }
+      
+      return this._erro(bloco);
+    } catch (e) {
+      return `<span style="color:red;">Erro no bloco: ${bloco}</span>`;
     }
-    if (!Array.isArray(bloco)) {
-      return this.blocos[bloco]() || `<span style='color:red;'>Error 2 com: ${bloco}</span>`;
-    }
-    
-    const [key, fn] = bloco;
-    return this.blocos[key]?.() + (fn ? fn() : '') || `Error ${key} 2.`;
   }
   
+  _erro(bloco) {
+    console.error(`Erro ao acessar o bloco: ${bloco}`);
+    return `<span style="color:red;">Erro ao acessar o bloco: ${bloco}</span>`;
+  }
   $(elemento) {
     return document.querySelector(elemento)
   }
@@ -313,31 +372,40 @@ clone(blocoParaClona, nomeDoBloco) {
    * Atualiza o conteúdo dos blocos existentes no DOM, inicializando se necessário.
    */
   show(blocos = []) {
+    const atualizados = [];
     blocos = blocos.length ? blocos : this.chaves;
     
     for (const chave of blocos) {
-      const elemento = document.getElementById(chave);
-      
       if (!this.blocos[chave]) continue;
-      
-      let conteudo = this.blocos[chave]();
-      if (elemento) {
-        if (conteudo instanceof HTMLElement) {
-          elemento.innerHTML = '';
-          elemento.appendChild(conteudo);
-        } else {
-          elemento.innerHTML = conteudo;
-        }
-      } else {
-        this.init([chave]);
-      }
+      const atualizado = this._renderBlock(chave);
+      if (atualizado) atualizados.push(chave);
     }
-    return this;
+    
+    return atualizados;
+  }
+  
+  _renderBlock(chave) {
+    const elemento = document.getElementById(chave);
+    const conteudo = this.blocos[chave]();
+    
+    if (!elemento) {
+      this.init([chave]);
+      return true;
+    }
+    
+    if (conteudo instanceof HTMLElement) {
+      elemento.innerHTML = '';
+      elemento.appendChild(conteudo);
+    } else {
+      elemento.innerHTML = conteudo;
+    }
+    
+    return true;
   }
 }
 
 const state = () => {
- // this.show([bloco])
+  // this.show([bloco])
   return obj;
 }
 
