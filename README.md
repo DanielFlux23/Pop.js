@@ -28,7 +28,7 @@ e adicione isso ao seu html
 
 ---
 
-### 1. constructor(blocos = {}, opens = [])
+#### 1. constructor(blocos = {}, opens = [])
 
 **Para que serve**  
 Inicializa a instância da classe Pop. Pode também já iniciar os blocos definidos.
