@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-  "build": "terser src/pop.js -o dist/pop.min.js -c -m && gzip -kf dist/pop.min.js"
+    "build": "terser src/pop.js -o dist/pop.min.js -c -m && gzip -kf dist/pop.min.js"
   },
   "repository": {
     "type": "git",
@@ -20,6 +20,7 @@
     "url": "https://github.com/DanielFlux23/Pop.js/issues"
   },
   "homepage": "https://github.com/DanielFlux23/Pop.js#readme",
-	"devDependencies": {  
-				"terser":"^5.39.0"                            }
+  "devDependencies": {
+    "terser": "^5.39.0"
+  }
 }
