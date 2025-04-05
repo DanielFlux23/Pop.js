@@ -1,15 +1,28 @@
-./exemplos/
+# Exemplos e arquivos de demo
+exemplos/
 
 # Sistemas operacionais
-.DS_Store  # macOS
-Thumbs.db  # Windows
+.DS_Store        # macOS
+Thumbs.db        # Windows
 
 # IDEs e editores
 .vscode/
 .idea/
-*.swp  # Arquivos temporários do Vim
+*.swp            # Vim swap files
 
 # Logs e temporários
 *.log
 *.tmp
+
+# Node.js
 node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.env
+.env.*.local
+
+# Outros comuns
+dist/
+build/
+coverage/
