@@ -11,4 +11,4 @@ Thumbs.db  # Windows
 
 # Logs e temporários
 *.log
-*.tmp
+*.tmpnode_modules/
