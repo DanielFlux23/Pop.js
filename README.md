@@ -18,34 +18,14 @@ Usando um arquivo <script>:
 
 Inclua o arquivo pop.js no seu projeto.
 
-`<script src="pop.js"></script>`
+`<script src="https://cdn.jsdelivr.net/gh/DanielFlux23/Pop.js/src/pop.js"></script>`
 
-Ou, se preferir, use um módulo ES6:
+Ou, se preferir clone o repositório
 
-`import Pop from './pop.js';`
+e adicione isso ao seu html
 
-## 🚀 Uso
+`<script src="/src/pop.js"></script>`
 
-
-```javascript
-// Definindo os blocos de conteúdo com funções que geram conteúdo dinâmico.
-const pop = new Pop({
-  bloco1: () => '<h1>Conteúdo do Bloco 1</h1>',
-  bloco2: () => '<p>Conteúdo do Bloco 2</p>',
-  $blocoEspecial: () => 'bloco2' // clonar o bloco2
-});
-
-
-// Inicializando e mostrando os blocos no DOM.
-pop.init(['bloco1', 'bloco2']);
-
-// Atualizando um bloco específico no DOM.
-pop.show(['bloco1']);
-
-// Recuperando o conteúdo de um bloco específico.
-const conteudoBloco1 = pop.id('bloco1');
-console.log(conteudoBloco1); // 'Conteúdo do Bloco 1'
-```
 ---
 
 ### 1. constructor(blocos = {}, opens = [])
