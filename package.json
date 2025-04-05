@@ -19,5 +19,7 @@
   "bugs": {
     "url": "https://github.com/DanielFlux23/Pop.js/issues"
   },
-  "homepage": "https://github.com/DanielFlux23/Pop.js#readme"
+  "homepage": "https://github.com/DanielFlux23/Pop.js#readme",
+	"devDependencies": {  
+				"terser":"^5.39.0"                            }
 }
