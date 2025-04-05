@@ -2,7 +2,7 @@
   "name": "popjs",
   "version": "1.0.0",
   "description": "**Pop.js** é uma biblioteca leve e flexível para manipulação dinâmica do DOM, permitindo adicionar e atualizar blocos HTML de maneira simples e sem complicação.",
-  "main": "index.js",
+  "main": "dist/pop.min.js"
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "terser src/pop.js -o dist/pop.min.js -c -m && gzip -kf dist/pop.min.js"
