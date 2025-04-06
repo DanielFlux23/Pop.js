@@ -14,7 +14,10 @@ const App = new Pop({
     <section id="home">
       <h2>Bem-vindo</h2>
       <p>Este é um exemplo adaptável com Pop.js.</p>
-    </section>`,
+    </section>
+    <a href="https://github.com/DanielFlux23/Pop.js">github</githuba>
+
+    `,
   
   contato: () => `
     <section id="contato">
@@ -52,7 +55,7 @@ App.contato = () => `
     
     <div id="feedback"></div>
   </section>
-`;
+  `;
 
 App.init(['container', 'header', 'home']);
 
