@@ -32,7 +32,7 @@ class Pop {
       if (!this.blocos[chave] || document.getElementById(chave)) continue;
       
       const elemento = document.createElement('div');
-      elemento.id = chave;
+      elemento.id = '_'+chave;
       
       if (chave.includes('$')) {
         // Caso especial: referência a outro bloco
@@ -363,6 +363,10 @@ class Pop {
     
     return true;
   }
+}
+
+const $ = (element) => {
+  return document.getElementById(element);
 }
 
 const state = () => {

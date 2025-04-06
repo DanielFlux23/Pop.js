@@ -1,42 +1,51 @@
-//const state = Pop.setVar('name',() => pop.show(['titulo']));
-
-state().name = prompt('qual é o seu nome?') || '';
-let clicks = 0;
-const pop = new Pop({
-  titulo: () => `<h1>bem vindo ${obj.name}!</h1>`,
-  time: () => `<h4>Segundos: ${new Date().getSeconds()}</h4>`,
-  contador: () => `você clicou ${clicks} vezes`,
-  butao: () => `<h3>+1<h3>`
-})
-
-pop.init(['titulo', 'time', 'contador', 'butao'], {
-  onRender: (el, chave) => {
-    el.style.border = '2px dashed blue';
-    //console.log(`Bloco ${chave} foi renderizado`, el);
-  }
-})
-
-//state.name=3
-/*const state = pop.setShow('name','titulo');
-console.log(state.name=7
-)*/
-setInterval(() => { pop.show(['time']) }, 1000)
-pop.evento('#butao', 'click', () => { clicks++;
-  pop.show(['contador']) })
-  /*
-const alvo = { nome: "Dani" };
-
-const proxy = new Proxy(alvo, {
-  get(obj, prop) {
-    console.log(`Acessando ${prop}`);
-    return obj[prop];
-  },
-  set(obj, prop, valor) {
-    console.log(`Alterando ${prop} para ${valor}`);
-    obj[prop] = valor;
-    return true;
-  }
+const App = new Pop({
+  container: () => `
+    <form id="form-contato">
+  `,
+  
+  cabecalho: () => `
+    <h2>Entre em contato</h2>`,
+  
+  nome: () => `
+    <label for="nome">Nome:</label>
+    <input type="text" id="nome" name="nome" required />`,
+  
+  email: () => `
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" required />`,
+  
+  mensagem: () => `
+    <label for="mensagem">Mensagem:</label>
+    <textarea id="mensagem" name="mensagem" rows="4" required></textarea>`,
+  
+  enviar: () => `
+    <button type="button" id="_enviar">Enviar</button>`,
+  
+  feedback: () => `
+    <div id="feedback"></div>
+  </form>`,
 });
 
-proxy.nome; // Loga: Acessando nome
-proxy.nome = "Lua"; // Loga: Alterando nome para Lua*/
+App.init([
+  'container',
+  'cabecalho',
+  'nome', // você tinha esquecido de incluir 'nome' aqui
+  'email',
+  'mensagem',
+  'enviar',
+  'feedback',
+]);
+
+App.evento('#_enviar', 'click', () => {
+  const email = $('email').value;
+  const mensagem = $('mensagem').value;
+  const nome = $('nome').value;
+  
+  if (email && mensagem && nome) {
+    $('feedback').textContent = 'Enviado com sucesso!';
+  } else {
+    $('feedback').textContent = 'Preencha todos os campos.';
+  }
+  
+  console.log({ nome, email, mensagem });
+});
