@@ -28,6 +28,7 @@ const App = new Pop({
       <button id="enviar">Enviar</button>
       <div id="feedback"></div>
     </section>`,
+    painel:() => ``
 });
 
 App.home = () => `
@@ -57,27 +58,38 @@ App.contato = () => `
   </section>
   `;
 
-App.init(['container', 'header', 'home']);
+App.init(['container', 'header', 'home','painel']);
 
 App.evento('#btn-home', 'click', () => {
-  $('app').innerHTML = App.home();
+  $('_painel').innerHTML = App.home();
 });
 
-App.evento('#btn-contato', 'click', () => {
-  $('app').innerHTML = App.contato();
+App.evento('#btn-contato', 'click', () => { $('_painel').innerHTML = App.contato()
+
+
+App.evento('#enviar', 'click', () => {
+  const nome = $('nome').value;
+  const email = $('email').value;
+  const msg = $('mensagem').value;
   
-  App.evento('#enviar', 'click', () => {
-    const nome = $('nome').value;
-    const email = $('email').value;
-    const msg = $('mensagem').value;
-    
-    if (nome && email && msg) {
-      $('feedback').textContent = 'Mensagem enviada com sucesso!';
-    } else {
-      $('feedback').textContent = 'Preencha todos os campos.';
-    }
-  });
-});
+  if (nome && email && msg) {
+    fetch('http://localhost:3000/api/contato', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nome, email, mensagem: msg })
+      })
+      .then(res => res.json())
+      .then(data => {
+        $('feedback').textContent = data.sucesso || 'Mensagem enviada!';
+      })
+      .catch(err => {
+        console.error(err);
+        $('feedback').textContent = 'Erro ao enviar mensagem.';
+      });
+  } else {
+    $('feedback').textContent = 'Preencha todos os campos.';
+  }
+}); });
 
 App.css(`
 * {
