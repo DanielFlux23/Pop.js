@@ -205,7 +205,12 @@ class Pop {
       this._executarProxima(bloco); // Executa a próxima animação da fila
     };
   }
-  
+  css(css){
+    const styleTag = document.createElement('style');
+
+    styleTag.innerHTML = css;
+document.head.appendChild(styleTag);
+}
   mover(bloco, config = {}) {
     
     const elemento = this.$$(bloco);

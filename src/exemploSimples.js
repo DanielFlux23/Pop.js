@@ -3,7 +3,7 @@ const App = new Pop({
   
   header: () => `
     <header>
-      <h1>Pop.js App</h1>
+      <h1>Pop.js</h1>
       <nav>
         <button id="btn-home">Home</button>
         <button id="btn-contato">Contato</button>
@@ -78,3 +78,113 @@ App.evento('#btn-contato', 'click', () => {
     }
   });
 });
+
+App.css(`
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  background-color: #f4f4f4;
+  color: #333;
+  line-height: 1.6;
+}
+
+main#app {
+  padding: 20px;
+  max-width: 800px;
+  margin: auto;
+}
+
+header {
+  background-color: #20232a;
+  color: white;
+  padding: 20px;
+  text-align: center;
+}
+
+header h1 {
+  margin-bottom: 10px;
+  font-size: 2em;
+}
+
+nav {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+nav button {
+  background-color: #61dafb;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  color: #20232a;
+  font-weight: bold;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+nav button:hover {
+  background-color: #21a1f1;
+}
+
+section {
+  margin-top: 30px;
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+section h2 {
+  margin-bottom: 15px;
+  color: #20232a;
+}
+
+input[type="text"],
+input[type="email"],
+textarea {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+button#enviar {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+button#enviar:hover {
+  background-color: #218838;
+}
+
+#feedback {
+  margin-top: 15px;
+  font-weight: bold;
+  color: #ff5722;
+}
+
+/* Link estilizado */
+a[href*="github"] {
+  display: inline-block;
+  margin-top: 20px;
+  color: #0366d6;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+a[href*="github"]:hover {
+  text-decoration: underline;
+}
+`)
