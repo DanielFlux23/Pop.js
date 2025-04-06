@@ -370,6 +370,50 @@ document.head.appendChild(styleTag);
   }
 }
 
+
+console.log('%c pop.js carregado... digite $pop("help")', 'color: lime; background: black; font-weight: bold; padding: 2px;');
+
+const comandosPop = {
+  help: () => `
+    === Comandos Pop.js ===
+    - help: mostra esta ajuda
+    - select <selector>: seleciona elementos do DOM
+    - css <selector>: mostra estilos computados
+    - text <selector>: mostra o texto do elemento
+    - html <selector>: mostra HTML interno
+    - log <mensagem>: log com estilo Pop.js
+    - github: abre o repositório do projeto
+  `,
+  
+  select: (selector) => document.querySelectorAll(selector),
+  
+  css: (selector) => {
+    const el = document.querySelector(selector);
+    return el ? getComputedStyle(el) : 'Elemento não encontrado.';
+  },
+  
+  text: (selector) => {
+    const el = document.querySelector(selector);
+    return el ? el.textContent : 'Elemento não encontrado.';
+  },
+  
+  html: (selector) => {
+    const el = document.querySelector(selector);
+    return el ? el.innerHTML : 'Elemento não encontrado.';
+  },
+  
+  log: (msg) => console.log('%c[Pop]', 'color: cyan; font-weight: bold;', msg),
+  
+  github: () => window.open('https://github.com/DanielFlux23/Pop.js', '_blank')
+};
+
+const $pop = (cmd, arg) => {
+  const fn = comandosPop[cmd];
+  if (typeof fn === 'function') {
+    return fn(arg);
+  }
+  return 'Comando inválido. Use $pop("help")';
+};
 const $ = (element) => {
   return document.getElementById(element);
 }
