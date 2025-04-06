@@ -54,45 +54,6 @@ class Pop {
     
     return this;
   }
-  init(blocos = [], { text = '', data = null, force = false, target = document.body, onRender = null } = {}) {
-  for (let chave of blocos) {
-    let conteudo;
-    const idExistente = document.getElementById(chave);
-    
-    if (!this.blocos[chave] && !chave.includes('&')) continue;
-    
-    if (idExistente && !force) continue;
-    if (idExistente && force) idExistente.remove();
-    
-    let chaveOriginal = chave;
-    
-    if (chave.includes('&')) {
-      const chaveAClona = chave.replace('&', '');
-      const numero = (this.clonagens[chaveAClona] = (this.clonagens[chaveAClona] || 0) + 1);
-      chave = `${chaveAClona}${numero}`;
-      this.add(chave, this.blocos[chaveAClona]);
-      conteudo = text ?? this.blocos[chaveAClona](data);
-    } else if (chave.includes('$')) {
-      conteudo = this.id(this.blocos[chave](data));
-    } else {
-      conteudo = text || this.blocos[chave](data);
-    }
-    
-    const elemento = document.createElement('div');
-    elemento.id = chave;
-    
-    if (conteudo instanceof HTMLElement) {
-      elemento.appendChild(conteudo);
-    } else {
-      elemento.innerHTML = conteudo;
-    }
-    
-    target.appendChild(elemento);
-    if (onRender) onRender(elemento, chaveOriginal);
-  }
-  
-  return this;
-}
   /**
    * permite adiciona blocos de forma mais flexível 
    */
@@ -148,7 +109,7 @@ class Pop {
     // Inicializamos ou incrementamos o contador de clonagens de forma mais clara
     const numeroDeClonagens = (this.clonagens[blocoParaClona] = (this.clonagens[blocoParaClona] || 0) + 1);
     // Atualizamos a chave com o número de clonagens
-    const chave = `${nome}${numeroDeClonagens}`;
+    const chave = nome;
     // Registramos a chave clonada
     this.add(chave, this.blocos[blocoParaClona]);
     this.init([chave], { text: this.blocos[blocoParaClona]() })
