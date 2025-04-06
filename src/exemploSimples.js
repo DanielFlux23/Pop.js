@@ -34,7 +34,7 @@ const App = new Pop({
 App.home = () => `
   <section id="home">
     <h2>Bem-vindo ao Pop.js</h2>
-    <p>Este é um template base que você pode adaptar para qualquer projeto.</p>
+    <p>A biblioteca leve e flexível para manipulação dinâmica do DOM, permitindo adicionar e atualizar blocos HTML de maneira simples e sem complicação.</p>
     <p>Use os botões de navegação para testar a troca de views sem recarregar a página.</p>
   </section>
 `;
