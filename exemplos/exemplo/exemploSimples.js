@@ -31,10 +31,10 @@ App.contato = () => `
 App.init(['container', 'header', 'home','painel']);
 
 App.evento('#btn-home', 'click', () => {
-  $('_painel').innerHTML = App.home();
+  $('painel').innerHTML = App.home();
 });
 
-App.evento('#btn-contato', 'click', () => { $('_painel').innerHTML = App.contato()
+App.evento('#btn-contato', 'click', () => { $('painel').innerHTML = App.contato()
 
 
 App.evento('#enviar', 'click', () => {

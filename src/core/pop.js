@@ -2,6 +2,7 @@ class Pop {
   constructor(blocos = {}, opens = []) {
     this.blocos = blocos; // Mapeamento de nomes para funções de renderização
     this.chaves = Object.keys(blocos); // Todas as chaves iniciais
+    this.grupes = {}
     this.set = {}; // Armazena variáveis observáveis
     this.clonagens = {}; // Controla duplicações de blocos
     this.animacoes = {}; // Gerencia animações em fila
@@ -32,7 +33,7 @@ class Pop {
       if (!this.blocos[chave] || document.getElementById(chave)) continue;
       
       const elemento = document.createElement('div');
-      elemento.id = '_'+chave;
+      elemento.id = chave;
       
       if (chave.includes('$')) {
         // Caso especial: referência a outro bloco
@@ -70,6 +71,20 @@ class Pop {
     }
     this.chaves = Object.keys(this.blocos);
     return this;
+  }
+  /**
+   * adicionar grupos de blocos
+   */
+  grupe(nome, blocos){
+   this.grupes[nome]=blocos;
+   return this;
+  }
+  
+  absoluteExiber(blocos=[]){
+    for (let i = 0; i < this.chaves.length; i++) {
+      // Tab to edit
+    if(!this.chaves[i]) this.remover(blocos[i])
+    }
   }
   
   setVar(nomeVariavel, callback) {
