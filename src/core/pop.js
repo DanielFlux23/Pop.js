@@ -132,94 +132,91 @@ class Pop {
   
   // Objeto que gerencia as animações em fila para cada elemento
   
-  animar(bloco, config = {}) {
-    // Inicializa a fila para o bloco, se ainda não existir
-    if (!this.animacoes[bloco]) {
-      this.animacoes[bloco] = { fila: [], emExecucao: false };
-    }
-    
-    // Adiciona a configuração da animação na fila
-    this.animacoes[bloco].fila.push(config);
-    
-    // Se já há uma animação em execução, aguarde
-    if (this.animacoes[bloco].emExecucao) return;
-    
-    this._executarProxima(bloco);
+animar(bloco, config = {}) {
+  if (!this.animacoes[bloco]) {
+    this.animacoes[bloco] = { fila: [], emExecucao: false };
   }
   
-  _executarProxima(bloco) {
-    const dados = this.animacoes[bloco];
-    
-    if (!dados || dados.fila.length === 0) {
-      dados.emExecucao = false;
-      return;
-    }
-    
-    dados.emExecucao = true;
-    const config = dados.fila.shift(); // Pega a próxima animação da fila
-    const elemento = document.getElementById(bloco);
-    
-    if (!elemento) {
-      console.error(`Elemento com id "${bloco}" não encontrado.`);
-      this._executarProxima(bloco); // Continua a fila mesmo em caso de erro
-      return;
-    }
-    
-    const {
-      type = "fade",
-        duration = 500,
-        easing = "ease-in-out",
-        delay = 0,
-        direction = 0
-    } = config;
-    
-    // Obtém os keyframes de acordo com o tipo da animação
-    const getKeyframes = () => {
-      switch (type) {
-        case "rotate":
-          const rotateValue = isNaN(direction) ? 360 : Number(direction);
-          return [{ transform: "rotate(0deg)" }, { transform: `rotate(${rotateValue}deg)` }];
-          
-        case "scale":
-          const scaleValue = isNaN(direction) ? 1.5 : Number(direction);
-          return [{ transform: "scale(1)" }, { transform: `scale(${scaleValue})` }];
-          
-        case "fade":
-          return [{ opacity: 0 }, { opacity: 1 }];
-          
-        case "slide":
-          const slideDirections = {
-            up: "translateY(-100%)",
-            down: "translateY(100%)",
-            left: "translateX(-100%)",
-            right: "translateX(100%)"
-          };
-          return [{ transform: slideDirections[direction] || "translateX(0)" }, { transform: "translateX(0)" }];
-          
-        case "bounce":
-          const bounceValue = isNaN(direction) ? 20 : Number(direction) * 10;
-          return [
-            { transform: "translateY(0)" },
-            { transform: `translateY(${bounceValue}px)` },
-            { transform: "translateY(0)" }
-          ];
-          
-        default:
-          return [{ opacity: 0 }, { opacity: 1 }];
-      }
-    };
-    
-    const keyframes = getKeyframes();
-    const options = { duration, delay, easing, iterations: 1, fill: "forwards" };
-    
-    // Cria a animação
-    const anim = elemento.animate(keyframes, options);
-    
-    anim.onfinish = () => {
-      dados.emExecucao = false;
-      this._executarProxima(bloco); // Executa a próxima animação da fila
-    };
+  this.animacoes[bloco].fila.push(config);
+  
+  if (!this.animacoes[bloco].emExecucao) {
+    this._executarProxima(bloco);
   }
+}
+
+_executarProxima(bloco) {
+  const dados = this.animacoes[bloco];
+  
+  if (!dados || !dados.fila.length) {
+    if (dados) dados.emExecucao = false;
+    return;
+  }
+  
+  dados.emExecucao = true;
+  const config = dados.fila.shift();
+  const elemento = document.getElementById(bloco);
+  
+  if (!elemento) {
+    console.error(`Elemento com id "${bloco}" não encontrado.`);
+    return this._executarProxima(bloco);
+  }
+  
+  const {
+    duration = 500,
+      easing = "ease-in-out",
+      delay = 0,
+      fill = "forwards"
+  } = config;
+  
+  const keyframes = this._gerarKeyframes(config);
+  
+  elemento.animate(keyframes, { duration, delay, easing, fill }).onfinish = () => {
+    dados.emExecucao = false;
+    this._executarProxima(bloco);
+  };
+}
+
+_gerarKeyframes({ type = "fade", direction = 0 }) {
+  const num = Number(direction);
+  
+  // Estratégias implícitas
+  const animations = {
+    fade: () => [{ opacity: 0 }, { opacity: 1 }],
+    
+    rotate: () => [
+      { transform: "rotate(0deg)" },
+      { transform: `rotate(${isNaN(num) ? 360 : num}deg)` }
+    ],
+    
+    scale: () => [
+      { transform: "scale(1)" },
+      { transform: `scale(${isNaN(num) ? 1.5 : num})` }
+    ],
+    
+    slide: () => {
+      const dirMap = {
+        up: "translateY(-100%)",
+        down: "translateY(100%)",
+        left: "translateX(-100%)",
+        right: "translateX(100%)"
+      };
+      const move = dirMap[direction] || "translateX(0)";
+      return [{ transform: move, opacity: 0 }, { transform: "translate(0,0)", opacity: 1 }];
+    },
+    
+    bounce: () => {
+      const px = isNaN(num) ? 20 : num * 10;
+      return [
+        { transform: "translateY(0)" },
+        { transform: `translateY(${px}px)` },
+        { transform: "translateY(0)" }
+      ];
+    }
+  };
+  
+  // fallback genérico
+  return animations[type]?.() || animations.fade();
+}
   css(css){
     const styleTag = document.createElement('style');
 

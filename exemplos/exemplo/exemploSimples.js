@@ -32,9 +32,25 @@ App.init(['container', 'header', 'home','painel']);
 
 App.evento('#btn-home', 'click', () => {
   $('painel').innerHTML = App.home();
+  App.animar("painel", {
+  keyframes: [
+    { transform: "scale(0) rotate(-360deg)", opacity: 0 },
+    { transform: "scale(1) rotate(0deg)", opacity: 1 }
+  ],
+  options: { duration: 1000, easing: "ease-out" }
+});
 });
 
-App.evento('#btn-contato', 'click', () => { $('painel').innerHTML = App.contato()
+App.evento('#btn-contato', 'click', () => { 
+  $('painel').innerHTML = App.contato();
+  App.animar("painel", {
+  keyframes: [
+    { filter: "brightness(1)" },
+    { filter: "brightness(2)" },
+    { filter: "brightness(1)" }
+  ],
+  options: { duration: 600, iterations: Infinity }
+});
 
 
 App.evento('#enviar', 'click', () => {
