@@ -30,6 +30,7 @@
 | **Data Binding**         | Manual/simples                              | Manual                                       | Automático via estado                            |
 | **Casos de uso ideais**  | Sites leves, dinâmicos e sem build process  | Scripts rápidos, plugins antigos             | SPAs complexas, apps interativos                 |
 ```
+
 veja um exemplo em:
 
 <a href="https://popjs.netlify.app/">clique aqui para um exemplo</a>
