@@ -41,8 +41,8 @@ Usando um arquivo <script>:
 
 Inclua o arquivo pop.js no seu projeto.
 
-``javascripit 
-<script src="https://cdn.jsdelivr.net/gh/DanielFlux23/Pop.js/src/pop.js"></script>``
+```javascript
+<script src="https://cdn.jsdelivr.net/gh/DanielFlux23/Pop.js/src/pop.js"></script>```
 
 
 Ou, se preferir clone o repositório
