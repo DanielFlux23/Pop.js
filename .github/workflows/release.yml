@@ -8,7 +8,7 @@ else
   LAST_TAG=""
 fi
 
-echo "Última tag: ${LAST_TAG:-<nenhuma>}"
+run: 'echo "Última tag: ${LAST_TAG:-<nenhuma>}"'
 
 # Nova versão
 if [[ -z "$LAST_TAG" ]]; then
