@@ -1,26 +1,51 @@
-name: Slim Release
+#!/bin/bash
+set -euo pipefail
 
-on:
-  push:
-    branches:
-      - main
+# Verifica se existe alguma tag
+if git describe --tags --abbrev=0 >/dev/null 2>&1; then
+  LAST_TAG=$(git describe --tags --abbrev=0)
+else
+  LAST_TAG=""
+fi
 
-jobs:
-  release:
-    runs-on: ubuntu-latest
+echo "Última tag: ${LAST_TAG:-<nenhuma>}"
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}  # permite push/tag
+# Nova versão
+if [[ -z "$LAST_TAG" ]]; then
+  NEW_VERSION="v0.0.1"
+else
+  IFS='.' read -r MAJOR MINOR PATCH <<<"${LAST_TAG#v}"
+  NEW_VERSION="v$MAJOR.$MINOR.$((PATCH + 1))"
+fi
 
-      - name: Setup Git
-        run: |
-          git config --global user.name 'github-actions'
-          git config --global user.email 'actions@github.com'
+echo "Nova versão: $NEW_VERSION"
 
-      - name: Run Tag & Release Script
-        run: |
-          chmod +x scripts/tag-and-release.sh
-          ./scripts/tag-and-release.sh
+# Gera changelog
+echo "Gerando changelog para $NEW_VERSION"
+{
+  echo "## $NEW_VERSION - $(date +%Y-%m-%d)"
+  if [[ -n "$LAST_TAG" ]]; then
+    git log "$LAST_TAG"..HEAD --pretty=format:"- %s"
+  else
+    git log --pretty=format:"- %s"
+  fi
+  echo ""
+} >> CHANGELOG.md
+
+# Git config
+git config user.name "github-actions"
+git config user.email "actions@github.com"
+
+# Commit e tag
+git add CHANGELOG.md
+
+if git diff --cached --quiet; then
+  echo "Nenhuma mudança no changelog. Abortando commit."
+  exit 0
+fi
+
+git commit -m "chore(release): $NEW_VERSION"
+git tag "$NEW_VERSION"
+
+git push origin main
+git push origin "$NEW_VERSION"
