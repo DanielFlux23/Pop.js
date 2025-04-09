@@ -12,6 +12,25 @@
 - Autoinicialização – A classe já carrega os blocos definidos na criação, o que facilita a configuração inicial.
 - Encadeamento – O retorno this permite chamadas encadeadas, algo que melhora a fluidez do código.
 
+```markdown
+| **Aspecto**              | **Pop.js**                                  | **jQuery**                                   | **React**                                         |
+|--------------------------|---------------------------------------------|----------------------------------------------|--------------------------------------------------|
+| **Propósito**            | Manipulação DOM moderna e simplificada      | Manipulação DOM imperativa (raiz, 2006)      | Criação de interfaces reativas (SPA/componentes) |
+| **Paradigma**            | Declarativo e modular                       | Imperativo                                   | Declarativo, baseado em componentes              |
+| **Peso (bundle)**        | Levíssimo (menos de 10KB)                   | Médio (~90KB minificado)                     | Pesado (React + ReactDOM ~120KB+)               |
+| **Sintaxe**              | Moderna, próxima de JS vanilla              | Sintaxe própria (ex: `$(...)`)               | JSX, hooks, useEffect, useState, etc.           |
+| **Reatividade**          | Parcial (event binding e interação)         | Não reativo por natureza                     | Totalmente reativo                               |
+| **Aprendizado**          | Muito fácil (1h já sai usando)              | Muito fácil                                  | Curva média a alta                               |
+| **Modularidade**         | Alta (baseada em componentes JS)            | Baixa                                        | Muito alta (componentes + hooks)                |
+| **Dependências**         | Zero                                        | Nenhuma, mas é uma dependência por si só     | React + eco (Webpack, Babel, etc)               |
+| **Comunidade/Adesão**    | Nascente (experimental/dev indie)           | Gigante, mas em declínio                     | Gigante, dominante no mercado                   |
+| **DOM Virtual**          | Não                                          | Não                                          | Sim                                              |
+| **SEO-friendly**         | Sim (não depende de virtual DOM ou SPA)     | Sim                                          | Depende do SSR (Next.js, etc)                   |
+| **Componentização**      | Sim (JS nativo)                             | Não                                           | Sim (top tier)                                   |
+| **Data Binding**         | Manual/simples                              | Manual                                       | Automático via estado                            |
+| **Casos de uso ideais**  | Sites leves, dinâmicos e sem build process  | Scripts rápidos, plugins antigos             | SPAs complexas, apps interativos                 |
+```
+
 #  Instalação
 
 Usando um arquivo <script>:
