@@ -1,6 +1,8 @@
 #!/bin/bash
 set -euo pipefail
 
+cd "$(git rev-parse --show-toplevel)"
+
 # Verifica se existe alguma tag
 if git tag --list | grep -q .; then
   LAST_TAG=$(git describe --tags --abbrev=0)
