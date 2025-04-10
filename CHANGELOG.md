@@ -8,4 +8,5 @@ Todas as mudanças importantes neste grimório são documentadas aqui.
 
 - Inicialização do grimoire
 - Configuração do ritual de versionamento automático
-- Adição do script de tag e changelog
+- Adição do script de tag e changelog## v0.0.1 - 2025-04-10
+- Atualizar o release.yml
