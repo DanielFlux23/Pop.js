@@ -14,3 +14,5 @@ O formato segue o padrão [Keep a Changelog](https://keepachangelog.com/pt-BR/1.
 
 ## v0.0.1 - 2025-04-10
 - Atualizar o tag-and-release.sh
+## v0.0.1 - 2025-04-10
+- Atualizar o CHANGELOG.md
