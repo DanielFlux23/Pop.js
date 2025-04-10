@@ -3,51 +3,67 @@ set -euo pipefail
 
 cd "$(git rev-parse --show-toplevel)"
 
-# Verifica se existe alguma tag
-if git tag --list | grep -q .; then
-  LAST_TAG=$(git describe --tags --abbrev=0)
-  echo "Última tag: $LAST_TAG"
-else
-  LAST_TAG=""
-  echo "Nenhuma tag encontrada. Primeira versão será criada."
-fi
+function get_last_tag() {
+  git tag --list | grep -q . && git describe --tags --abbrev=0 || echo ""
+}
 
-# Define nova versão
+function bump_version() {
+  local tag="$1"
+  if [[ -z "$tag" ]]; then
+    echo "v0.0.1"
+  else
+    IFS='.' read -r major minor patch <<<"${tag#v}"
+    echo "v$major.$minor.$((patch + 1))"
+  fi
+}
+
+function generate_changelog() {
+  local version="$1"
+  local last_tag="$2"
+
+  echo "## $version - $(date +%Y-%m-%d)" >> CHANGELOG.md
+  if [[ -n "$last_tag" ]]; then
+    git log "$last_tag"..HEAD --pretty=format:"- %s" >> CHANGELOG.md
+  else
+    git log --pretty=format:"- %s" >> CHANGELOG.md
+  fi
+  echo "" >> CHANGELOG.md
+}
+
+function configure_git() {
+  git config user.name "github-actions"
+  git config user.email "actions@github.com"
+}
+
+function commit_and_tag() {
+  local version="$1"
+
+  git add CHANGELOG.md
+  if git diff --cached --quiet; then
+    echo "Nenhuma mudança no changelog. Nada a commitar."
+    return 1
+  fi
+
+  git commit -m "chore(release): $version"
+  git tag "$version"
+  git push origin main
+  git push origin "$version"
+}
+
+# Execução principal
+LAST_TAG=$(get_last_tag)
+
 if [[ -z "$LAST_TAG" ]]; then
-  NEW_VERSION="v0.0.1"
+  echo "Nenhuma tag encontrada. Primeira versão será criada."
 else
-  IFS='.' read -r MAJOR MINOR PATCH <<<"${LAST_TAG#v}"
-  NEW_VERSION="v$MAJOR.$MINOR.$((PATCH + 1))"
+  echo "Última tag: $LAST_TAG"
 fi
 
+NEW_VERSION=$(bump_version "$LAST_TAG")
 echo "Nova versão: $NEW_VERSION"
 
-# Gera changelog
 echo "Gerando changelog para $NEW_VERSION"
-{
-  echo "## $NEW_VERSION - $(date +%Y-%m-%d)"
-  if [[ -n "$LAST_TAG" ]]; then
-    git log "$LAST_TAG"..HEAD --pretty=format:"- %s"
-  else
-    git log --pretty=format:"- %s"
-  fi
-  echo ""
-} >> CHANGELOG.md
+generate_changelog "$NEW_VERSION" "$LAST_TAG"
 
-# Configura git
-git config user.name "github-actions"
-git config user.email "actions@github.com"
-
-# Faz commit se houver mudanças
-git add CHANGELOG.md
-if git diff --cached --quiet; then
-  echo "Nenhuma mudança no changelog. Nada a commitar."
-  exit 0
-fi
-
-git commit -m "chore(release): $NEW_VERSION"
-git tag "$NEW_VERSION"
-
-# Push
-git push origin main
-git push origin "$NEW_VERSION"
+configure_git
+commit_and_tag "$NEW_VERSION" || exit 0
