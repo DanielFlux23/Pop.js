@@ -80,3 +80,64 @@ export function popExtra(pop) {
   
   return pop;
 }
+
+export function createApp(renderFn) {
+  let state = [];
+  let effects = [];
+  let cursor = 0;
+  
+  const app = {
+    useState(initialValue) {
+      const currentIndex = cursor;
+      state[currentIndex] = state[currentIndex] ?? initialValue;
+      
+      const setState = newValue => {
+        state[currentIndex] = newValue;
+        cursor = 0;
+        renderFn(); // Re-render
+      };
+      
+      return [state[currentIndex], setState];
+    },
+    
+    useEffect(callback, deps) {
+      const hasChanged = () => {
+        const oldDeps = effects[cursor];
+        if (!oldDeps) return true;
+        return !deps.every((dep, i) => Object.is(dep, oldDeps[i]));
+      };
+      
+      if (hasChanged()) {
+        callback();
+        effects[cursor] = deps;
+      }
+      cursor++;
+    },
+    
+    run() {
+      cursor = 0;
+      renderFn();
+    }
+  };
+  
+  return app;
+}
+
+const root = document.getElementById('app');
+
+const app = createApp(() => {
+  const [count, setCount] = app.useState(0);
+  
+  app.useEffect(() => {
+    console.log(`O contador foi atualizado para ${count}`);
+  }, [count]);
+  
+  root.innerHTML = `
+    <h1>Contador: ${count}</h1>
+    <button id="btn">Incrementar</button>
+  `;
+  
+  document.getElementById('btn').onclick = () => setCount(count + 1);
+});
+
+app.run();

@@ -68,9 +68,9 @@ fxtests.add({
       text: 'Alterado!',
       onRender: (el) => el.style.border = '2px dashed blue'
     });
-    const card = pop.$$('_card').attributes;
+    const card = pop.$$('card').attributes;
     
-    return card.id.value === '_card'&& card.style.value === 'border: 2px dashed blue;';//'<div id="card" style="border: 2px dashed blue;">Alterado!</div>' ;//&& card.style.border === '2px dashed blue';
+    return card.id.value === 'card'&& card.style.value === 'border: 2px dashed blue;';//'<div id="card" style="border: 2px dashed blue;">Alterado!</div>' ;//&& card.style.border === '2px dashed blue';
   },
   resultEsperado: true
 });
@@ -112,7 +112,7 @@ fxtests.add({
       box: () => '<div class="box">Box</div>'
     });
     pop.init(['box']); // Certifique-se de que o box seja inicializado
-    pop.animar('_box', { type: 'fade', duration: 500 });
+    pop.animar('box', { type: 'fade', duration: 500 });
     const box = pop.id('box');
     return box !== null; // Verifique se o box foi manipulado
   },
@@ -126,7 +126,7 @@ fxtests.add({
     const pop = new Pop({
       box: () => '<div class="box">Box</div>'
     });
-    pop.mover('_box', { vento: { ax: 2, delay: 30, maxX: 300 }, gravidade: { ay: 1, delay: 30 } });
+    pop.mover('box', { vento: { ax: 2, delay: 30, maxX: 300 }, gravidade: { ay: 1, delay: 30 } });
     const box = pop.id('box');
     return box !== null; // Espera-se que a física tenha manipulado o bloco
   },

@@ -1,5 +1,4 @@
-import {App} from '/exemplos/exemplo/app.js';
-
+import { App } from '/exemplos/exemplo/app.js';
 
 App.home = () => `
   <section id="home">
@@ -28,54 +27,72 @@ App.contato = () => `
   </section>
   `;
 
-App.init(['container', 'header', 'home','painel']);
+App.init(['container', 'header', 'home', 'painel',]);
+
+//snippet
+/*App.evento('#btn', 'click', () => alert('It just works.'));
+//snippet2
+let count = 0;
+App.evento('#incrementar', 'click', () => {
+  count++;
+  $('contador').innerHTML = count;
+});*/
 
 App.evento('#btn-home', 'click', () => {
-  $('painel').innerHTML = App.home();
-  App.animar("painel", {
-  keyframes: [
-    { transform: "scale(0) rotate(-360deg)", opacity: 0 },
-    { transform: "scale(1) rotate(0deg)", opacity: 1 }
-  ],
-  options: { duration: 1000, easing: "ease-out" }
-});
-});
+/*  App.init(['snippet']);
+  App.init(['snippet2'])*/
+  App.remover('contato')
+   App.show(['home'])
 
-App.evento('#btn-contato', 'click', () => { 
-  $('painel').innerHTML = App.contato();
-  App.animar("painel", {
-  keyframes: [
-    { filter: "brightness(1)" },
-    { filter: "brightness(2)" },
-    { filter: "brightness(1)" }
-  ],
-  options: { duration: 600, iterations: Infinity }
+  App.animar("home", {
+    keyframes: [
+      { transform: "scale(0) rotate(-360deg)", opacity: 0 },
+      { transform: "scale(1) rotate(0deg)", opacity: 1 }
+    ],
+    options: { duration: 1000, easing: "ease-out" }
+  });
 });
 
+App.evento('#btn-contato', 'click', () => {
+  /*App.remover('snippet');
+  App.remover('snippet2')*/
+  App.remover('home')
+  App.show(['contato']);
 
-App.evento('#enviar', 'click', () => {
-  const nome = $('nome').value;
-  const email = $('email').value;
-  const msg = $('mensagem').value;
+  App.animar("contato", {
+    keyframes: [
+      { filter: "brightness(1)" },
+      { filter: "brightness(2)" },
+      { filter: "brightness(1)" }
+    ],
+    options: { duration: 600, iterations: Infinity }
+  });
   
-  if (nome && email && msg) {
-    fetch('http://localhost:3000/api/contato', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ nome, email, mensagem: msg })
-      })
-      .then(res => res.json())
-      .then(data => {
-        $('feedback').textContent = data.sucesso || 'Mensagem enviada!';
-      })
-      .catch(err => {
-        console.error(err);
-        $('feedback').textContent = 'Erro ao enviar mensagem.';
-      });
-  } else {
-    $('feedback').textContent = 'Preencha todos os campos.';
-  }
-}); });
+  
+  App.evento('#enviar', 'click', () => {
+    const nome = $('nome').value;
+    const email = $('email').value;
+    const msg = $('mensagem').value;
+    
+    if (nome && email && msg) {
+      fetch('http://localhost:3000/api/contato', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ nome, email, mensagem: msg })
+        })
+        .then(res => res.json())
+        .then(data => {
+          $('feedback').textContent = data.sucesso || 'Mensagem enviada!';
+        })
+        .catch(err => {
+          console.error(err);
+          $('feedback').textContent = 'Erro ao enviar mensagem.';
+        });
+    } else {
+      $('feedback').textContent = 'Preencha todos os campos.';
+    }
+  });
+});
 
 App.css(`
 * {
@@ -185,4 +202,30 @@ a[href*="github"] {
 a[href*="github"]:hover {
   text-decoration: underline;
 }
+pre {
+  background-color: #1e1e1e;
+  color: #dcdcdc;
+  width:90%;
+  padding: 10px 10px;
+  border-radius: 8px;
+  overflow-x: auto;
+  font-family: 'Fira Code', monospace;
+  font-size: 0.95 rem;
+  line-height: 1.5;
+  margin-bottom: 1.5 rem;
+  margin:0 auto;
+  box-shadow: 0 4 px 12 px rgba(0, 0, 0, 0.2);
+}
+
+code {
+  display: block;
+  white-space: pre;
+}
+
+/* Adicionais para destacar sintaxe simples (sem lib externa) */
+code.tag { color: #569cd6; }
+code.attr { color: # 9 cdcfe; }
+code.string { color: #ce9178; }
+code.function { color: #dcdcaa; }
+code.keyword { color: #c586c0; }
 `);
