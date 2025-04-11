@@ -132,92 +132,26 @@ class Pop {
   
   // Objeto que gerencia as animações em fila para cada elemento
   
-animar(bloco, config = {}) {
-  if (!this.animacoes[bloco]) {
-    this.animacoes[bloco] = { fila: [], emExecucao: false };
-  }
-  
-  this.animacoes[bloco].fila.push(config);
-  
-  if (!this.animacoes[bloco].emExecucao) {
-    this._executarProxima(bloco);
-  }
-}
-
-_executarProxima(bloco) {
-  const dados = this.animacoes[bloco];
-  
-  if (!dados || !dados.fila.length) {
-    if (dados) dados.emExecucao = false;
-    return;
-  }
-  
-  dados.emExecucao = true;
-  const config = dados.fila.shift();
-  const elemento = document.getElementById(bloco);
-  
-  if (!elemento) {
-    console.error(`Elemento com id "${bloco}" não encontrado.`);
-    return this._executarProxima(bloco);
-  }
-  
-  const {
-    duration = 500,
-      easing = "ease-in-out",
-      delay = 0,
-      fill = "forwards"
-  } = config;
-  
-  const keyframes = this._gerarKeyframes(config);
-  
-  elemento.animate(keyframes, { duration, delay, easing, fill }).onfinish = () => {
-    dados.emExecucao = false;
-    this._executarProxima(bloco);
-  };
-}
-
-_gerarKeyframes({ type = "fade", direction = 0 }) {
-  const num = Number(direction);
-  
-  // Estratégias implícitas
-  const animations = {
-    fade: () => [{ opacity: 0 }, { opacity: 1 }],
-    
-    rotate: () => [
-      { transform: "rotate(0deg)" },
-      { transform: `rotate(${isNaN(num) ? 360 : num}deg)` }
-    ],
-    
-    scale: () => [
-      { transform: "scale(1)" },
-      { transform: `scale(${isNaN(num) ? 1.5 : num})` }
-    ],
-    
-    slide: () => {
-      const dirMap = {
-        up: "translateY(-100%)",
-        down: "translateY(100%)",
-        left: "translateX(-100%)",
-        right: "translateX(100%)"
-      };
-      const move = dirMap[direction] || "translateX(0)";
-      return [{ transform: move, opacity: 0 }, { transform: "translate(0,0)", opacity: 1 }];
-    },
-    
-    bounce: () => {
-      const px = isNaN(num) ? 20 : num * 10;
-      return [
-        { transform: "translateY(0)" },
-        { transform: `translateY(${px}px)` },
-        { transform: "translateY(0)" }
-      ];
+  animate(el, animations, finalCallback) {
+    if (!Array.isArray(animations)) {
+      // Caso seja só um objeto, não uma fila
+      animations = [animations];
     }
+    
+    function runNext(index) {
+      if (index >= animations.length) {
+        if (typeof finalCallback === 'function') finalCallback();
+        return;
+      }
+      
+      const current = animations[index];
+      const { duration = 1000, ...props } = current;
+      
+      animateOnce(el, props, duration, () => runNext(index + 1));
+    }
+    
+    runNext(0);
   };
-  
-  // fallback genérico
-  return animations[type]?.() || animations.fade();
-}
-
 html(bloco,html){
   this.$('#'+bloco).innerHTML=html;html
 return this;
@@ -401,6 +335,48 @@ document.head.appendChild(styleTag);
     return true;
   }
 }
+
+function parseCSSValue(value) {
+    const match = /^(-?[\d.]+)([a-z%]*)$/i.exec(value);
+    return match ? { num: parseFloat(match[1]), unit: match[2] || '' } : { num: 0, unit: '' };
+  }
+  
+   function animateOnce(el, props, duration, onComplete) {
+    const startTime = performance.now();
+    const initial = {};
+    
+    for (const prop in props) {
+      const computed = getComputedStyle(el)[prop];
+      const parsed = parseCSSValue(computed);
+      const targetParsed = parseCSSValue(props[prop]);
+      initial[prop] = {
+        from: parsed.num,
+        to: targetParsed.num,
+        unit: targetParsed.unit || parsed.unit
+      };
+    }
+    
+    function tick(now) {
+      const elapsed = now - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      
+      for (const prop in initial) {
+        const { from, to, unit } = initial[prop];
+        const value = from + (to - from) * progress;
+        el.style[prop] = value + unit;
+      }
+      
+      if (progress < 1) {
+        requestAnimationFrame(tick);
+      } else {
+        if (typeof onComplete === 'function') onComplete();
+      }
+    }
+    
+    requestAnimationFrame(tick);
+  }
+  
+  // Fila de animações
 
 
 console.log('%c pop.js carregado... digite $pop("help")', 'color: lime; background: black; font-weight: bold; padding: 2px;');

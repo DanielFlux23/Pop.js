@@ -38,19 +38,28 @@ App.evento('#incrementar', 'click', () => {
   $('contador').innerHTML = count;
 });*/
 
+const keyframes = [
+  //{ left: '200px', top: '150px', width: '100px', height: '100px', opacity: 1, borderRadius: '0%', offset: 0 },
+  { width: '50px', offset: 0 },
+  { width: '400px', offset: 1 },
+];
+
+const timing = {
+  duration: 500,
+  iterations: 1,
+  fill: 'forwards',
+  easing: 'ease-in-out'
+};
+
 App.evento('#btn-home', 'click', () => {
 /*  App.init(['snippet']);
   App.init(['snippet2'])*/
   App.remover('contato')
    App.show(['home'])
 
-  App.animar("home", {
-    keyframes: [
-      { transform: "scale(0) rotate(-360deg)", opacity: 0 },
-      { transform: "scale(1) rotate(0deg)", opacity: 1 }
-    ],
-    options: { duration: 1000, easing: "ease-out" }
-  });
+  App.$$('home').animate(keyframes, timing).onfinish = () => {
+  console.log("Tudo feito, chefia!");
+};
 });
 
 App.evento('#btn-contato', 'click', () => {
@@ -59,14 +68,17 @@ App.evento('#btn-contato', 'click', () => {
   App.remover('home')
   App.show(['contato']);
 
-  App.animar("contato", {
+App.$$('contato').animate(keyframes, timing).onfinish = () => {
+  console.log("Tudo feito, chefia!");
+};
+ /* App.animar("contato", {
     keyframes: [
       { filter: "brightness(1)" },
       { filter: "brightness(2)" },
       { filter: "brightness(1)" }
     ],
     options: { duration: 600, iterations: Infinity }
-  });
+  });*/
   
   
   App.evento('#enviar', 'click', () => {
@@ -93,6 +105,8 @@ App.evento('#btn-contato', 'click', () => {
     }
   });
 });
+
+
 
 App.css(`
 * {
