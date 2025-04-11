@@ -217,6 +217,12 @@ _gerarKeyframes({ type = "fade", direction = 0 }) {
   // fallback genérico
   return animations[type]?.() || animations.fade();
 }
+
+html(bloco,html){
+  this.$('#'+bloco).innerHTML=html;html
+return this;
+}
+
   css(css){
     const styleTag = document.createElement('style');
 
@@ -336,15 +342,29 @@ document.head.appendChild(styleTag);
     return document.getElementById(elemento)
   }
   
-  remover(bloco = '') {
-    if (bloco > 1) {
-      bloco.forEach((index, array) => {
-        document.getElementById(array[index]).remove() || `<span style='color:red;'>Error 2 com: ${bloco}</span>`;
-        
-      })
+   remover(bloco = '', debug=false) {
+  if (!bloco) return;
+  
+  // Se for array, remove cada item
+  if (Array.isArray(bloco)) {
+    bloco.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.remove();
+      } else {
+        if(debug) console.error(`Elemento com id "${id}" não encontrado.`);
+      }
+    });
+  } else {
+    // Se for string (id único), remove diretamente
+    const el = document.getElementById(bloco);
+    if (el) {
+      el.remove();
+    } else {
+      if(debug) console.error(`Elemento com id "${bloco}" não encontrado.`);
     }
-    document.getElementById(bloco).remove() || `<span style='color:red;'>Error 2 com: ${bloco}</span>`;
   }
+}
   
   /**
    * Atualiza o conteúdo dos blocos existentes no DOM, inicializando se necessário.
