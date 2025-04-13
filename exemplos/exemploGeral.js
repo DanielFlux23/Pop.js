@@ -2,6 +2,7 @@ let nome = 'paulo';
 
 // Inicializa um objeto Pop com diferentes blocos
 const pop = new Pop({
+  box:() => `text`,
   blocoSimples: () => `<h1>Hello</h1>`, // Bloco básico com um título
   bloco2: () => `Este bloco será removido`, // Bloco temporário
   blocoVariavel: () => `<p>Bom dia, ${nome}!</p>`, // Bloco dinâmico baseado em variável
@@ -11,6 +12,7 @@ const pop = new Pop({
 
 // Inicializa os blocos e adiciona ao DOM
 pop.init([
+  'box',
   'blocoSimples',
   'bloco2',
   'blocoVariavel',
@@ -26,14 +28,64 @@ pop.show(['blocoVariavel']); // Agora exibirá "Bom dia, Ana!"
 console.log(pop.id('blocoVariavel'));
 
 // Anima o clone do blocoSimples (rotação)
-pop.animar('$blocoClone', {
-  type: "rotate",
+const keyframes = [
+  //{ left: '200px', top: '150px', width: '100px', height: '100px', opacity: 1, borderRadius: '0%', offset: 0 },
+  { width: '50px', offset: 0 },
+  { width: '400px', offset: 1 },
+];
+
+const timing = {
   duration: 500,
-  easing: "ease-in-out",
-  repeat: true,
-  delay: 0,
-  direction: 40,
-});
+  iterations: 1,
+  fill: 'forwards',
+  easing: 'ease-in-out'
+};
+
+  
+  
+  const configAnimacoes = {animacoes:[],config:{}};
+
+  pop.anime('#box', {
+    props: [
+    {
+      transform: 'translateX(0)',
+      opacity: 0.5,
+      offset: 0
+    },
+    {
+      transform: 'translateX(50px)',
+      opacity: 0.9,
+      offset: 0.5
+    }],
+    duration: 2000,
+    easing: 'ease-in-out'
+  }).onfinish = () => {
+    console.log("Tudo feito, chefia!");
+  };
+  
+  /*anime('#box')
+    .add({
+      transform: 'translateX(0)',
+      opacity: 0.5,
+      offset: 0
+    })
+    .add({
+      transform: 'translateX(10px)',
+      opacity: 0.9,
+      offset: 0
+    })
+    .config({
+      duration: 2000,
+      easing: 'ease-in-out'
+    }).onfinish = () => {
+      console.log("Tudo feito, chefia!");
+    };
+  */
+
+pop.anime('$blocoClone', {
+  rotate:'10px'
+}, () => console.log(0));
+
 
 // Movimenta o blocoVariavel no eixo X e Y
 pop.mover('blocoVariavel', {

@@ -1,107 +1,53 @@
-# Exemplos de Animações com a Classe `Animador`
+### anime(bloco, config)
 
-Abaixo estão alguns exemplos de uso da classe `Animador`, variando de simples a complexas, usando uma interface intuitiva.
+**Para que serve**  
+Aplica animações a um bloco especificado, com suporte para uma API fluente para adição de animações e configuração dos parâmetros de tempo, ou utilizando um modo declarativo direto.
 
----
+**Argumentos**  
+- `bloco` (string): Seletor CSS do bloco (elemento DOM) que será animado.
+- `config` (objeto opcional): Objeto de configuração que define as propriedades da animação.
+  - `props`: Array ou objeto contendo as keyframes da animação.
+  - `duration`: Duração da animação em milissegundos (padrão é 1000).
+  - `easing`: Função de easing da animação (padrão é `'linear'`).
+  - `fill`: Preenchimento da animação (padrão é `'forwards'`).
+  - `onfinish`: Função de callback chamada quando a animação terminar.
 
-## 1. Fade In clássico
-```js
-animador.animar("elemento", { type: "fade", duration: 500 });
+**Comportamento**
+O método tem dois modos de operação:
+
+1. **Modo fluente**  
+   Quando não é passado o argumento `config`, o método retorna uma série de funções encadeáveis que permitem adicionar animações e configurar suas propriedades. As funções disponíveis são:
+   - `add(props)`: Adiciona uma animação ao conjunto de animações. A propriedade `props` deve ser um array ou objeto contendo as keyframes da animação.
+   - `config(configs)`: Configura os parâmetros de tempo da animação (como duração, easing e fill). Depois de configurar, chama `play()` automaticamente.
+   - `play()`: Inicia a animação com os parâmetros e keyframes definidos. Se nenhuma animação foi adicionada, um aviso será mostrado.
+   - `onfinish`: Função de callback chamada quando a animação termina.
+
+2. **Modo declarativo**  
+   Quando `config` é passado como um objeto, ele é utilizado diretamente para definir os parâmetros da animação. A animação é então iniciada imediatamente. Se a propriedade `props` não for fornecida ou estiver vazia, um aviso será exibido.
+
+**Retorno**  
+- No **modo fluente**, retorna a instância do animador para permitir encadeamento de chamadas.
+- No **modo declarativo**, retorna o `player` da animação (`Animation`), que é um objeto com controle sobre a animação.
+
+**Exemplo de uso - Modo fluente**
+```javascript
+pop.anime('#box')
+  .add([{ transform: 'scale(0.5)' }, { transform: 'scale(1)' }])
+  .config({ duration: 500, easing: 'ease-out' })
+  .play();
 ```
 
----
-
-## 2. Rotação dramática
-```js
-animador.animar("elemento", { type: "rotate", direction: 720, duration: 1000 });
-```
-
----
-
-## 3. Zoom In estilo apresentação
-```js
-animador.animar("elemento", { type: "scale", direction: 1.8, duration: 600 });
-```
-
----
-
-## 4. Slide In da esquerda com suavidade
-```js
-animador.animar("elemento", { type: "slide", direction: "left", duration: 700, easing: "ease-out" });
-```
-
----
-
-## 5. Bounce (pulo leve)
-```js
-animador.animar("elemento", { type: "bounce", direction: 2, duration: 800 });
-```
-
----
-
-## 6. Slide + Fade In (dupla transição)
-```js
-animador.animar("elemento", { 
-  keyframes: [
-    { transform: "translateY(50%)", opacity: 0 },
-    { transform: "translateY(0)", opacity: 1 }
-  ],
-  options: { duration: 600, easing: "ease-out" }
+**Exemplo de uso - Modo declarativo**
+```javascript
+pop.anime('#box', {
+  props: [{ transform: 'scale(0.5)' }, { transform: 'scale(1)' }],
+  duration: 500,
+  easing: 'ease-out',
+  onfinish: () => console.log('Animação finalizada!')
 });
 ```
 
----
-
-## 7. Flip tipo carta de baralho
-```js
-animador.animar("elemento", {
-  keyframes: [
-    { transform: "rotateY(0deg)", opacity: 0.5 },
-    { transform: "rotateY(180deg)", opacity: 1 }
-  ],
-  options: { duration: 1000, easing: "ease-in-out" }
-});
-```
-
----
-
-## 8. Pulso infinito (looping)
-```js
-animador.animar("elemento", {
-  keyframes: [
-    { transform: "scale(1)" },
-    { transform: "scale(1.1)" },
-    { transform: "scale(1)" }
-  ],
-  options: { duration: 800, iterations: Infinity }
-});
-```
-
----
-
-## 9. Brilho tipo neon piscante
-```js
-animador.animar("elemento", {
-  keyframes: [
-    { filter: "brightness(1)" },
-    { filter: "brightness(2)" },
-    { filter: "brightness(1)" }
-  ],
-  options: { duration: 600, iterations: Infinity }
-});
-```
-
----
-
-## 10. Entrada épica com zoom, fade e rotação
-```js
-animador.animar("elemento", {
-  keyframes: [
-    { transform: "scale(0) rotate(-360deg)", opacity: 0 },
-    { transform: "scale(1) rotate(0deg)", opacity: 1 }
-  ],
-  options: { duration: 1000, easing: "ease-out" }
-});
-```
-
----
+**Notas**  
+- Se o bloco não for encontrado no DOM, um erro será exibido no console.
+- No **modo fluente**, é possível encadear as funções `add`, `config` e `play`.
+- Se nenhuma animação for definida no **modo fluente**, o método exibirá um aviso de que nenhuma animação foi adicionada.

@@ -35,6 +35,7 @@ veja um exemplo em:
 
 <a href="https://popjs.netlify.app/">clique aqui para um exemplo</a>
 
+
 #  Instalação
 
 Usando um arquivo <script>:
@@ -42,7 +43,7 @@ Usando um arquivo <script>:
 Inclua o arquivo pop.js no seu projeto.
 
 ```javascript
-<script src="https://cdn.jsdelivr.net/gh/DanielFlux23/Pop.js/src/core/pop.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/DanielFlux23/Pop.js/src/pop.js"></script>
 ```
 
 
@@ -75,282 +76,57 @@ const pop = new Pop({
 
 ---
 
-### 2. `init(blocos = [], { text = '', data = null, onRender = null, target = null} = {})`
+### 1. init(blocos, options)
 
 **Para que serve**  
-Inicializa e insere no DOM os blocos especificados, se ainda não existirem.
+Inicializa e insere no DOM os blocos especificados, criando elementos `div` com o conteúdo gerado pelas funções registradas.
 
 **Argumentos**  
-- `blocos`: Array de chaves dos blocos.  
-- `text`: (Opcional) Texto fixo para substituir o conteúdo do bloco.  
-- `data`: (Opcional) Dados a serem passados para os blocos.
-- `onRender` (opcional): Função executada logo após o bloco ser inserido no DOM. Recebe dois argumentos: o elemento inserido e a chave original do bloco.
-- `target` (opcional): Elemento ou seletor CSS onde o bloco será inserido. Por padrão, é document.body.
+- `blocos`: Array de strings com os nomes dos blocos.
+- `options`: Objeto opcional:
+  - `text`: HTML fixo a ser usado.
+  - `data`: Dados para passar à função do bloco.
+  - `force`: Se true, força reinserção.
+  - `target`: Elemento DOM onde inserir.
+  - `onRender`: Callback ao renderizar o bloco.
 
 **Retorno**  
 Instância da classe `Pop`.
 
 **Exemplo**
 ```javascript
-pop.init(['card'], {
-  data: { nome: 'Dani' },
-  text: 'Substituir HTML',
-  target: '#container',
-  onRender: (el, chave) => {
-    el.style.border = '2px dashed blue';
-  }
-});
-
+pop.init(['header', 'main'], { data: { user: 'Ana' } });
 ```
 
 ---
 
-### 3. `id(bloco)`
+### 2. add(nomeOuObj, callback)
 
 **Para que serve**  
-Obtém o conteúdo de um bloco.
+Adiciona novos blocos ao sistema.
 
 **Argumentos**  
-- `bloco`: String da chave, ou array `[chave, funcaoExtra]`.
-
-**Retorno**  
-Conteúdo HTML ou resultado da função.
-
-**Exemplo**
-```javascript
-const html = pop.id('header');
-```
-
----
-
-### 4. `show(blocos = [])`
-
-**Para que serve**  
-Atualiza o conteúdo dos blocos renderizados. Inicializa se não existir.
-
-**Argumentos**  
-- `blocos`: (Opcional) Array com nomes dos blocos. Se omitido, atualiza todos.
+- `nomeOuObj`: Nome do bloco (string) ou objeto com múltiplos blocos.
+- `callback`: Função que retorna HTML ou HTMLElement.
 
 **Retorno**  
 Instância da classe `Pop`.
 
 **Exemplo**
 ```javascript
-pop.show(['header']);
+pop.add('menu', () => '<nav>Menu</nav>');
 ```
 
 ---
 
-### 5.`anime(bloco, config)`
+### 3. grupe(nome, blocos)
 
 **Para que serve**  
-Aplica animações utilizando propriedades customizadas via Web Animations API.
+Cria grupos de blocos que podem ser reutilizados.
 
 **Argumentos**  
-- `bloco`: Seletor ou id do bloco.  
-- `config`:  
-  - `props`: Array de objetos com os frames da animação.  
-  - `duration`: Tempo em ms.  
-  - `easing`, `fill`, `onfinish`, etc.
-
-**Retorno**  
-Objeto `Animation` ou função encadeável.
-
-**Exemplo**
-```javascript
-pop.anime('#box', {
-  props: [{ transform: 'scale(1)' }, { transform: 'scale(1.2)' }],
-  duration: 500
-});
-```
-
----
-
-### 6. `mover(selector, config = {})`
-
-**Para que serve**  
-Move dinamicamente o elemento, permitindo tanto movimentação baseada em física (aceleração, fricção, limites) quanto animação matemática (usando funções de progresso).
-
-**Argumentos**  
-- `selector`: Seletor CSS do elemento a ser animado (ex: `#box`, `.item`).  
-- `config`: Objeto de configuração com dois modos possíveis:
-
----
-
-**Modo Física (simulação contínua)**  
-Utiliza aceleração, fricção e limites para simular movimento:
-
-```javascript
-{
-  physics: {
-    ax: 2,        // Aceleração em X
-    ay: 1,        // Aceleração em Y
-    friction: 0.95, // Fricção (1 = sem perda de aceleração)
-    minX: 0, maxX: 300, // Limites em X
-    minY: 0, maxY: 500  // Limites em Y
-  }
-}
-```
-
----
-
-**Modo Animação (baseada em tempo)**  
-Define funções baseadas no progresso da animação (`p` varia de 0 a 1):
-
-```javascript
-{
-  duration: 3000, // Duração em ms
-  x: (p) => Math.sin(p * Math.PI * 2) * 100,
-  y: (p) => Math.cos(p * Math.PI * 2) * 100
-}
-```
-
----
-
-**Retorno**  
-Objeto com métodos de controle:
-
-- `pausar()` – Pausa a animação.
-- `continuar()` – Retoma a animação.
-- `resetar()` – Reseta posição (modo física).
-
----
-
-**Exemplos**
-
-**1. Modo física:**
-```javascript
-pop.mover('#box', {
-  physics: {
-    ax: 2,
-    ay: 1,
-    friction: 0.96,
-    maxX: 300,
-    maxY: 200
-  }
-});
-```
-
-**2. Modo animação:**
-```javascript
-pop.mover('#box', {
-  duration: 4000,
-  x: (p) => Math.sin(p * Math.PI * 2) * 150,
-  y: (p) => Math.cos(p * Math.PI * 2) * 150
-});
-```
-
----
-
-### 7. `evento(seletor, tipo, funcao)`
-
-**Para que serve**  
-Adiciona ouvintes de eventos em elementos DOM.
-
-**Argumentos**  
-- `seletor`: String do seletor CSS.  
-- `tipo`: Tipo do evento (ex: `"click"`).  
-- `funcao`: Função de callback.
-
-**Exemplo**
-```javascript
-pop.evento('#btn', 'click', () => alert('Clicado!'));
-```
-
----
-
-### 8. `remover(bloco)`
-
-**Para que serve**  
-Remove elementos do DOM por id.
-
-**Argumentos**  
-- `bloco`: String ou array com ids.
-
-**Exemplo**
-```javascript
-pop.remover('box');
-```
-
----
-
-### 9. `add(nome, callback)`
-
-**Para que serve**  
-Adiciona dinamicamente um novo bloco.
-
-**Argumentos**  
-- `nome`: Nome da chave do bloco.  
-- `callback`: Função que retorna HTML ou elemento.
-
-**Retorno**  
-Instância da classe `Pop`.
-
----
-
-### 10. `setVar(nomeVariavel, callback)`
-
-**Para que serve**  
-Cria uma variável observável. Executa um callback sempre que seu valor mudar.
-
-**Argumentos**  
-- `nomeVariavel`: Nome da variável dentro de `pop.set`.  
-- `callback`: Função a ser chamada no `set`.
-
-**Exemplo**
-```javascript
-pop.setVar('contador', () => console.log('Mudou!'));
-pop.set.contador = 42;
-```
-
----
-
-### 11. `clone(blocoOriginal, nomeDoClone)`
-
-**Para que serve**  
-Cria uma cópia de um bloco existente.
-
-**Argumentos**  
-- `blocoOriginal`: Nome do bloco base.  
-- `nomeDoClone`: (Opcional) Nome para o clone.
-
-**Exemplo**
-```javascript
-pop.clone('card', 'cardNovo');
-```
-
----
-
-### 12. `$(seletor) & $$(id)`
-
-**Para que serve**  
-Atalhos para `document.querySelector` e `getElementById`.
-
-**Exemplo**
-```javascript
-pop.$('#minhaDiv').innerHTML = 'Oi!';
-```
-
----
-
-### 13. `style(bloco)`
-
-**Para que serve**  
-Retorna o objeto `style` de um bloco.
-
-**Exemplo**
-```javascript
-pop.style('box').backgroundColor = 'red';
-```
-
-### `grupe(nome, blocos)`
-
-**Para que serve**  
-Cria grupos de blocos que podem ser reutilizados juntos.
-
-**Argumentos**  
-- `nome`: Nome do grupo.  
-- `blocos`: Array de nomes de blocos a serem agrupados.
+- `nome`: Nome do grupo.
+- `blocos`: Array de nomes de blocos.
 
 **Retorno**  
 Instância da classe `Pop`.
@@ -362,10 +138,10 @@ pop.grupe('layout', ['header', 'main', 'footer']);
 
 ---
 
-### 14. `absoluteExiber(blocos)`
+### 4. absoluteExiber(blocos)
 
 **Para que serve**  
-Remove do DOM todos os blocos que **não** estão no array especificado.
+Remove blocos não definidos no array.
 
 **Argumentos**  
 - `blocos`: Array com nomes de blocos válidos.
@@ -380,14 +156,33 @@ pop.absoluteExiber(['main']);
 
 ---
 
-### 15. `setShow(nomeVariavel, blocos)`
+### 5. setVar(nomeVariavel, callback)
 
 **Para que serve**  
-Exibe blocos automaticamente sempre que a variável observável associada muda de valor.
+Cria uma variável observável com reação personalizada.
 
 **Argumentos**  
-- `nomeVariavel`: Nome da variável criada via `setVar`.  
-- `blocos`: Array com nomes dos blocos a serem exibidos.
+- `nomeVariavel`: Nome da variável.
+- `callback`: Função chamada ao alterar o valor.
+
+**Retorno**  
+Objeto `set` da instância.
+
+**Exemplo**
+```javascript
+pop.setVar('contador', () => console.log('Atualizado!'));
+```
+
+---
+
+### 6. setShow(nomeVariavel, blocos)
+
+**Para que serve**  
+Configura uma variável que, ao mudar, mostra blocos.
+
+**Argumentos**  
+- `nomeVariavel`: Nome da variável.
+- `blocos`: Blocos que devem ser exibidos.
 
 **Retorno**  
 Nenhum.
@@ -399,14 +194,55 @@ pop.setShow('visivel', ['modal']);
 
 ---
 
-### 16. `html(bloco, html)`
+### 7. clone(blocoParaClona, nomeDoBloco)
 
 **Para que serve**  
-Define manualmente o HTML interno de um bloco.
+Clona um bloco com novo nome e o renderiza.
 
 **Argumentos**  
-- `bloco`: ID do bloco.  
-- `html`: String com conteúdo HTML.
+- `blocoParaClona`: Nome do bloco base.
+- `nomeDoBloco`: Novo nome do bloco (opcional).
+
+**Retorno**  
+Nenhum.
+
+**Exemplo**
+```javascript
+pop.clone('box', 'boxClonado');
+```
+
+---
+
+### 8. anime(bloco, config)
+
+**Para que serve**  
+Aplica animações a um bloco.
+
+**Argumentos**  
+- `bloco`: Seletor do bloco.
+- `config`: Objeto com `props`, `duration`, `easing`, `fill`, `onfinish`.
+
+**Retorno**  
+Objeto `Animation` ou função encadeável.
+
+**Exemplo**
+```javascript
+pop.anime('#box', {
+  props: [{ transform: 'scale(1)' }, { transform: 'scale(1.2)' }],
+  duration: 500
+});
+```
+
+---
+
+### 9. html(bloco, html)
+
+**Para que serve**  
+Define o HTML interno de um bloco.
+
+**Argumentos**  
+- `bloco`: ID do bloco.
+- `html`: HTML como string.
 
 **Retorno**  
 Instância da classe `Pop`.
@@ -418,25 +254,171 @@ pop.html('header', '<h1>Novo título</h1>');
 
 ---
 
-### 17. `css(css)`
+### 10. css(css)
 
 **Para que serve**  
-Insere regras CSS diretamente no documento.
+Insere CSS no documento.
 
 **Argumentos**  
-- `css`: String contendo código CSS.
+- `css`: Código CSS como string.
 
 **Retorno**  
 Nenhum.
 
 **Exemplo**
 ```javascript
-pop.css('body { background: #000; color: #fff; }');
+pop.css('body { background: #000; }');
 ```
 
 ---
 
+### 11. mover(bloco, config)
 
+**Para que serve**  
+Aplica movimento contínuo com aceleração, limites e fricção.
+
+**Argumentos**  
+- `bloco`: ID do bloco.
+- `config`: Objeto com configurações físicas (`ax`, `ay`, `minX`, etc).
+
+**Retorno**  
+Nenhum.
+
+**Exemplo**
+```javascript
+pop.mover('box', {
+  loop: { ax: 1, delay: 16, friccao: 0.9 }
+});
+```
+
+---
+
+### 12. style(bloco)
+
+**Para que serve**  
+Acessa diretamente o estilo do bloco.
+
+**Argumentos**  
+- `bloco`: ID do bloco.
+
+**Retorno**  
+Objeto `style` do DOM.
+
+**Exemplo**
+```javascript
+pop.style('box').backgroundColor = 'red';
+```
+
+---
+
+### 13. evento(seletor, typeEvento, funcao)
+
+**Para que serve**  
+Adiciona um ouvinte de evento a elementos.
+
+**Argumentos**  
+- `seletor`: CSS selector.
+- `typeEvento`: Tipo de evento (e.g. 'click').
+- `funcao`: Função callback.
+
+**Retorno**  
+Nenhum.
+
+**Exemplo**
+```javascript
+pop.evento('.botao', 'click', () => alert('Clicado!'));
+```
+
+---
+
+### 14. id(bloco)
+
+**Para que serve**  
+Obtém o conteúdo HTML ou executa função de um bloco.
+
+**Argumentos**  
+- `bloco`: String com o nome do bloco ou array `[nome, funcaoExtra]`.
+
+**Retorno**  
+HTML do bloco.
+
+**Exemplo**
+```javascript
+const conteudo = pop.id('footer');
+```
+
+---
+
+### 15. remover(bloco, debug)
+
+**Para que serve**  
+Remove elementos do DOM pelo ID.
+
+**Argumentos**  
+- `bloco`: String ou array de strings com os IDs.
+- `debug`: Booleano para exibir erros se não encontrados.
+
+**Retorno**  
+Nenhum.
+
+**Exemplo**
+```javascript
+pop.remover(['menu', 'header'], true);
+```
+
+---
+
+### 16. show(blocos)
+
+**Para que serve**  
+Atualiza ou insere blocos no DOM.
+
+**Argumentos**  
+- `blocos`: Array de blocos a serem atualizados.
+
+**Retorno**  
+Array com os nomes dos blocos renderizados.
+
+**Exemplo**
+```javascript
+pop.show(['main']);
+```
+
+---
+
+### 17. $(elemento)
+
+**Para que serve**  
+Seleciona um elemento com `querySelector`.
+
+**Argumentos**  
+- `elemento`: Seletor CSS.
+
+**Retorno**  
+Elemento DOM.
+
+**Exemplo**
+```javascript
+const el = pop.$('.titulo');
+```
+
+---
+
+### 18. $$(elemento)
+
+**Para que serve**  
+Seleciona um elemento por `id`.
+
+**Argumentos**  
+- `elemento`: ID do elemento.
+
+**Retorno**  
+Elemento DOM.
+
+**Exemplo**
+```javascript
+const el = pop.$$('box');
+```
 ## Blocos com `$` e `&`
 
 - **Chave com `$`**: Interpreta o valor retornado como uma referência a outro bloco.  

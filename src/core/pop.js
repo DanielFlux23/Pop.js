@@ -5,7 +5,7 @@ class Pop {
     this.grupes = {}
     this.set = {}; // Armazena variáveis observáveis
     this.clonagens = {}; // Controla duplicações de blocos
-    this.animacoes = {}; // Gerencia animações em fila
+    this.configAnimacoes = {animacoes:[],timing:{}}; // Gerencia animações em fila
     
     // Inicializa blocos, dependendo do valor de 'opens'
     this.init(opens === 'initPop' ? this.chaves : opens);
@@ -80,6 +80,17 @@ class Pop {
    return this;
   }
   
+  timeGrupe(grupo,time,callback){
+    const grupe = this.grupes[grupo];
+    
+    console.log(grupe)
+    for (let i = 0; i < grupe.length; i++) {
+      // Tab to edit
+      setTimeout(callback,time,grupe[i])
+    }
+  }
+  
+  
   absoluteExiber(blocos=[]){
     for (let i = 0; i < this.chaves.length; i++) {
       // Tab to edit
@@ -131,27 +142,65 @@ class Pop {
   }
   
   // Objeto que gerencia as animações em fila para cada elemento
+ anime(bloco, config) {
+   // let [animacoes,timing] = this.configAnimacoes;
+   let animacoes = [];
+   let timing = {};
+   
+   let elemento = document.querySelector(bloco);
+   
+   if (!elemento) {
+     console.error(`Elemento '${bloco}' não encontrado.`);
+     return;
+   }
+   
+   // API fluente: quando só o seletor é passado
+   if (!config) {
+     const funcoes = {
+       add: (props) => {
+         animacoes.push(props);
+         return funcoes;
+       },
+       config: (configs) => {
+         timing = { ...timing, ...configs };
+         funcoes.play()
+         return funcoes;
+       },
+       onfinish: null,
+       play: () => {
+         if (animacoes.length === 0) {
+           console.warn('Nenhuma animação adicionada.');
+           return;
+         }
+         console.log()
+         const player = elemento.animate(animacoes, timing);
+         if (typeof funcoes.onfinish === 'function') {
+           player.onfinish = funcoes.onfinish;
+         }
+         return player;
+       }
+     };
+     return funcoes;
+   }
+   
+   // Modo declarativo
+   if (!config.props) {
+     console.warn('config.props está indefinido ou vazio.');
+     return;
+   }
+   
+   const keyframes = config.props;
+   timing = {
+     duration: config.duration || 1000,
+     easing: config.easing || 'linear',
+     fill: config.fill || 'forwards'
+   };
+   
+   const player = elemento.animate(keyframes, timing);
+   player.onfinish = config.onfinish || null;
+   return player;
+ }  
   
-  animate(el, animations, finalCallback) {
-    if (!Array.isArray(animations)) {
-      // Caso seja só um objeto, não uma fila
-      animations = [animations];
-    }
-    
-    function runNext(index) {
-      if (index >= animations.length) {
-        if (typeof finalCallback === 'function') finalCallback();
-        return;
-      }
-      
-      const current = animations[index];
-      const { duration = 1000, ...props } = current;
-      
-      animateOnce(el, props, duration, () => runNext(index + 1));
-    }
-    
-    runNext(0);
-  };
 html(bloco,html){
   this.$('#'+bloco).innerHTML=html;html
 return this;
@@ -163,68 +212,61 @@ return this;
     styleTag.innerHTML = css;
 document.head.appendChild(styleTag);
 }
-  mover(bloco, config = {}) {
-    
-    const elemento = this.$$(bloco);
-    
-    if (!elemento) return console.error(`Elemento ${bloco} não encontrado`);
-    
-    let estado = { x: 0, y: 0 }; // Estado global do bloco
-    let pausado = false; // Controle de pausa
-    
-    Object.keys(config).forEach((chave) => {
-      const obj = config[chave];
-      
-      if (!obj || typeof obj !== 'object') return;
-      
-      // Definir valores padrão
-      obj.x = obj.x ?? 0;
-      obj.y = obj.y ?? 0;
-      obj.ax = obj.ax ?? 0;
-      obj.ay = obj.ay ?? 0;
-      obj.delay = obj.delay ?? 1000;
-      obj.minX = obj.minX ?? -Infinity;
-      obj.maxX = obj.maxX ?? Infinity;
-      obj.minY = obj.minY ?? -Infinity;
-      obj.maxY = obj.maxY ?? Infinity;
-      obj.friccao = obj.friccao ?? 1; // 1 = sem fricção, menor que 1 reduz a aceleração
-      obj.reset = obj.reset ?? false; // Se true, reseta a posição depois de um tempo
-      obj.pause = obj.pause ?? false; // Se true, pausa o movimento
-      
-      setInterval(() => {
-        if (pausado || obj.pause) return;
-        
-        // Aplica aceleração com fricção
-        obj.ax *= obj.friccao;
-        obj.ay *= obj.friccao;
-        
-        estado.x += obj.ax;
-        estado.y += obj.ay;
-        
-        // Respeita os limites
-        estado.x = Math.max(obj.minX, Math.min(obj.maxX, estado.x));
-        estado.y = Math.max(obj.minY, Math.min(obj.maxY, estado.y));
-        
-        // Atualiza a posição do elemento
-        elemento.style.transform = `translate(${estado.x}px, ${estado.y}px)`;
-        
-        // Reseta a posição após 3 segundos se "reset" for true
-        if (obj.reset) {
-          setTimeout(() => {
-            estado.x = obj.x;
-            estado.y = obj.y;
-            elemento.style.transform = `translate(${estado.x}px, ${estado.y}px)`;
-          }, 3000);
-        }
-        
-      }, obj.delay);
-    });
-    
-    // Função para pausar e retomar
-    this.pausar = () => (pausado = true);
-    this.continuar = () => (pausado = false);
-  }
+ mover(selector, config = {}) {
+  const el = document.querySelector(selector);
+  if (!el) return console.error(`Elemento ${selector} não encontrado`);
   
+  const startTime = performance.now();
+  const duration = config.duration || 1000;
+  const usePhysics = !!config.physics; // define se é modo físico ou modo matemático
+  const estado = { x: config.x ?? 0, y: config.y ?? 0 };
+  let pausado = false;
+  
+  const loop = (now) => {
+    if (pausado) return requestAnimationFrame(loop);
+    
+    const t = now - startTime;
+    const p = Math.min(t / duration, 1);
+    
+    let x, y;
+    
+    if (usePhysics) {
+      const f = config.physics.friction ?? 1;
+      config.physics.ax *= f;
+      config.physics.ay *= f;
+      estado.x += config.physics.ax;
+      estado.y += config.physics.ay;
+      
+      // Limites
+      estado.x = Math.max(config.physics.minX ?? -Infinity, Math.min(config.physics.maxX ?? Infinity, estado.x));
+      estado.y = Math.max(config.physics.minY ?? -Infinity, Math.min(config.physics.maxY ?? Infinity, estado.y));
+      
+      x = estado.x;
+      y = estado.y;
+      
+    } else {
+      // Modo função matemática com progresso
+      x = config.x ? config.x(p) : 0;
+      y = config.y ? config.y(p) : 0;
+    }
+    
+    el.style.transform = `translate(${x}px, ${y}px)`;
+    
+    if (p < 1 || usePhysics) requestAnimationFrame(loop);
+  };
+  
+  requestAnimationFrame(loop);
+  
+  return {
+    pausar: () => (pausado = true),
+    continuar: () => (pausado = false),
+    resetar: () => {
+      estado.x = config.x ?? 0;
+      estado.y = config.y ?? 0;
+    }
+  };
+}
+
   style(bloco) {
     return this.$$(bloco).style
   }
@@ -336,45 +378,7 @@ document.head.appendChild(styleTag);
   }
 }
 
-function parseCSSValue(value) {
-    const match = /^(-?[\d.]+)([a-z%]*)$/i.exec(value);
-    return match ? { num: parseFloat(match[1]), unit: match[2] || '' } : { num: 0, unit: '' };
-  }
-  
-   function animateOnce(el, props, duration, onComplete) {
-    const startTime = performance.now();
-    const initial = {};
-    
-    for (const prop in props) {
-      const computed = getComputedStyle(el)[prop];
-      const parsed = parseCSSValue(computed);
-      const targetParsed = parseCSSValue(props[prop]);
-      initial[prop] = {
-        from: parsed.num,
-        to: targetParsed.num,
-        unit: targetParsed.unit || parsed.unit
-      };
-    }
-    
-    function tick(now) {
-      const elapsed = now - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-      
-      for (const prop in initial) {
-        const { from, to, unit } = initial[prop];
-        const value = from + (to - from) * progress;
-        el.style[prop] = value + unit;
-      }
-      
-      if (progress < 1) {
-        requestAnimationFrame(tick);
-      } else {
-        if (typeof onComplete === 'function') onComplete();
-      }
-    }
-    
-    requestAnimationFrame(tick);
-  }
+
   
   // Fila de animações
 
