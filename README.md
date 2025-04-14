@@ -6,9 +6,6 @@
 Ideal para quem quer montar interfaces interativas sem frameworks pesados.
 Com sintaxe fluida, inicialização automática e suporte a encadeamento, Pop.js é perfeita pra projetos simples que precisam de velocidade e eficiência.
 
-> “Criado por pura preguiça de aprender React. E funcionou.”
-
-
 #  Características
 
 - Simplicidade – O código é direto ao ponto e fácil de entender.
@@ -494,6 +491,7 @@ Este projeto é licenciado sob a MIT License – veja o arquivo LICENSE para mai
 
 ---
 
+> “Criado por pura preguiça de aprender React. E funcionou.”
 
 ## 🍿 Por que "Pop"?
 
