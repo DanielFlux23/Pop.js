@@ -2,6 +2,10 @@
 
 **Pop.js** é uma biblioteca leve e flexível para manipulação dinâmica do DOM, permitindo adicionar e atualizar blocos HTML de maneira simples e sem complicação.
 
+> Pop.js é uma biblioteca JavaScript ultra-leve para manipulação dinâmica do DOM com componentes reutilizáveis e zero dependências.
+Ideal para quem quer montar interfaces interativas sem frameworks pesados.
+Com sintaxe fluida, inicialização automática e suporte a encadeamento, Pop.js é perfeita pra projetos simples que precisam de velocidade e eficiência.
+
 > “Criado por pura preguiça de aprender React. E funcionou.”
 
 
