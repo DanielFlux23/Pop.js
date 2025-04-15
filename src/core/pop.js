@@ -124,9 +124,33 @@ class Pop {
         // mythis.show([blocos])
       }
     });
-    
-    
   }
+  
+  watch(prop, callback) {
+  let val = this._data[prop];
+  Object.defineProperty(this._data, prop, {
+    get: () => val,
+    set: (novo) => {
+      val = novo;
+      callback(novo);
+      if (this._bindings[prop]) {
+        this._bindings[prop].forEach(el => el.textContent = novo);
+      }
+    }
+  });
+}
+
+component(nome, renderFn) {
+  this._components = this._components || {};
+  this._components[nome] = renderFn;
+}
+
+mount(nome, target, props = {}) {
+  const html = this._components[nome](props);
+  const el = document.createElement('div');
+  el.innerHTML = html;
+  target.appendChild(el.firstElementChild);
+}
   
   clone(blocoParaClona, nomeDoBloco) {
     if (!this.blocos[blocoParaClona]) console.warn('parece que este bloco não existir: ' + blocoParaClona);
@@ -218,9 +242,12 @@ document.head.appendChild(styleTag);
   
   const startTime = performance.now();
   const duration = config.duration || 1000;
-  const usePhysics = !!config.physics; // define se é modo físico ou modo matemático
+  const usePhysics = !!config.physics;
   const estado = { x: config.x ?? 0, y: config.y ?? 0 };
   let pausado = false;
+  
+  const largura = el.offsetWidth;
+  const altura = el.offsetHeight;
   
   const loop = (now) => {
     if (pausado) return requestAnimationFrame(loop);
@@ -237,15 +264,26 @@ document.head.appendChild(styleTag);
       estado.x += config.physics.ax;
       estado.y += config.physics.ay;
       
-      // Limites
-      estado.x = Math.max(config.physics.minX ?? -Infinity, Math.min(config.physics.maxX ?? Infinity, estado.x));
-      estado.y = Math.max(config.physics.minY ?? -Infinity, Math.min(config.physics.maxY ?? Infinity, estado.y));
+      const minX = config.physics.minX ?? -Infinity;
+      const maxX = (config.physics.maxX ?? Infinity) - largura;
+      const minY = config.physics.minY ?? -Infinity;
+      const maxY = (config.physics.maxY ?? Infinity) - altura;
+      
+      // Rebote nas bordas (com tamanho do elemento considerado)
+      if (estado.x <= minX || estado.x >= maxX) {
+        config.physics.ax *= -1;
+      }
+      if (estado.y <= minY || estado.y >= maxY) {
+        config.physics.ay *= -1;
+      }
+      
+      // Limitar dentro das bordas
+      estado.x = Math.max(minX, Math.min(maxX, estado.x));
+      estado.y = Math.max(minY, Math.min(maxY, estado.y));
       
       x = estado.x;
       y = estado.y;
-      
     } else {
-      // Modo função matemática com progresso
       x = config.x ? config.x(p) : 0;
       y = config.y ? config.y(p) : 0;
     }
@@ -266,7 +304,6 @@ document.head.appendChild(styleTag);
     }
   };
 }
-
   style(bloco) {
     return this.$$(bloco).style
   }
@@ -377,62 +414,3 @@ document.head.appendChild(styleTag);
     return true;
   }
 }
-
-
-  
-  // Fila de animações
-
-
-console.log('%c pop.js carregado... digite $pop("help")', 'color: lime; background: black; font-weight: bold; padding: 2px;');
-
-const comandosPop = {
-  help: () => `
-    === Comandos Pop.js ===
-    - help: mostra esta ajuda
-    - select <selector>: seleciona elementos do DOM
-    - css <selector>: mostra estilos computados
-    - text <selector>: mostra o texto do elemento
-    - html <selector>: mostra HTML interno
-    - log <mensagem>: log com estilo Pop.js
-    - github: abre o repositório do projeto
-  `,
-  
-  select: (selector) => document.querySelectorAll(selector),
-  
-  css: (selector) => {
-    const el = document.querySelector(selector);
-    return el ? getComputedStyle(el) : 'Elemento não encontrado.';
-  },
-  
-  text: (selector) => {
-    const el = document.querySelector(selector);
-    return el ? el.textContent : 'Elemento não encontrado.';
-  },
-  
-  html: (selector) => {
-    const el = document.querySelector(selector);
-    return el ? el.innerHTML : 'Elemento não encontrado.';
-  },
-  
-  log: (msg) => console.log('%c[Pop]', 'color: cyan; font-weight: bold;', msg),
-  
-  github: () => window.open('https://github.com/DanielFlux23/Pop.js', '_blank')
-};
-
-const $pop = (cmd, arg) => {
-  const fn = comandosPop[cmd];
-  if (typeof fn === 'function') {
-    return fn(arg);
-  }
-  return 'Comando inválido. Use $pop("help")';
-};
-const $ = (element) => {
-  return document.getElementById(element);
-}
-
-const state = () => {
-  // this.show([bloco])
-  return obj;
-}
-
-let obj = {};

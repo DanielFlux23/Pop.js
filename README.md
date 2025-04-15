@@ -306,7 +306,89 @@ pop.set.contador = 42;
 
 ---
 
-### 11. `clone(blocoOriginal, nomeDoClone)`
+### 11. `watch(prop, callback)`
+
+**Para que serve**  
+Observa mudanças em uma propriedade específica e executa uma função sempre que ela for atualizada. Também atualiza elementos vinculados automaticamente.
+
+**Argumentos**  
+- `prop`: Nome da propriedade a ser observada.  
+- `callback`: Função a ser executada sempre que a propriedade mudar.
+
+**Retorno**  
+Nenhum.
+
+**Exemplo**
+```javascript
+pop.watch('titulo', novo => {
+  console.log('Novo título:', novo);
+});
+pop.titulo = 'Bem-vindo!';
+```
+
+---
+
+### 12. `component(nome, renderFn)`
+
+**Para que serve**  
+Registra um novo componente com um nome e uma função de renderização.
+
+**Argumentos**  
+- `nome`: Nome do componente (string).
+- `renderFn`: Função que retorna o conteúdo HTML do componente, baseada nas propriedades passadas. A função recebe as `props` como argumento.
+
+**Retorno**  
+Não retorna valor (void).
+
+**Exemplo**
+```javascript
+component('header', (props) => {
+  return `<header><h1>${props.titulo}</h1></header>`;
+});
+```
+
+---
+
+### 13. `mount(nome, target, props = {})`
+
+**Para que serve**  
+Renderiza e adiciona o HTML de um componente no elemento alvo (`target`), passando as propriedades necessárias.
+
+**Argumentos**  
+- `nome`: Nome do componente que foi registrado previamente.
+- `target`: Elemento DOM onde o componente será inserido.
+- `props`: Objeto de propriedades que será passado para a função de renderização do componente.
+
+**Retorno**  
+Nenhum (adiciona o componente ao `target`).
+
+**Exemplo**
+```javascript
+myComponent.mount('header', document.body, { title: 'Meu Site' });
+```
+
+---
+
+### 14. `bind(prop, selector)`
+
+**Para que serve**  
+Vincula uma propriedade de dados (`prop`) a um elemento do DOM, atualizando seu conteúdo sempre que o valor mudar.
+
+**Argumentos**  
+- `prop`: Nome da propriedade que será observada.
+- `selector`: Seletor CSS (string) ou elemento DOM a ser vinculado.
+
+**Retorno**  
+Nenhum (estabelece vínculo entre dados e elementos).
+
+**Exemplo**
+```javascript
+myComponent.bind('username', '#user-display');
+```
+
+---
+
+### 15. `clone(blocoOriginal, nomeDoClone)`
 
 **Para que serve**  
 Cria uma cópia de um bloco existente.
@@ -322,7 +404,7 @@ pop.clone('card', 'cardNovo');
 
 ---
 
-### 12. `$(seletor) & $$(id)`
+### 16. `$(seletor) & $$(id)`
 
 **Para que serve**  
 Atalhos para `document.querySelector` e `getElementById`.
@@ -334,7 +416,7 @@ pop.$('#minhaDiv').innerHTML = 'Oi!';
 
 ---
 
-### 13. `style(bloco)`
+### 17. `style(bloco)`
 
 **Para que serve**  
 Retorna o objeto `style` de um bloco.
@@ -344,7 +426,7 @@ Retorna o objeto `style` de um bloco.
 pop.style('box').backgroundColor = 'red';
 ```
 
-### `grupe(nome, blocos)`
+### 18. `grupe(nome, blocos)`
 
 **Para que serve**  
 Cria grupos de blocos que podem ser reutilizados juntos.
@@ -363,7 +445,7 @@ pop.grupe('layout', ['header', 'main', 'footer']);
 
 ---
 
-### 14. `absoluteExiber(blocos)`
+### 19. `absoluteExiber(blocos)`
 
 **Para que serve**  
 Remove do DOM todos os blocos que **não** estão no array especificado.
@@ -381,7 +463,7 @@ pop.absoluteExiber(['main']);
 
 ---
 
-### 15. `setShow(nomeVariavel, blocos)`
+### 20. `setShow(nomeVariavel, blocos)`
 
 **Para que serve**  
 Exibe blocos automaticamente sempre que a variável observável associada muda de valor.
@@ -400,7 +482,7 @@ pop.setShow('visivel', ['modal']);
 
 ---
 
-### 16. `html(bloco, html)`
+### 21. `html(bloco, html)`
 
 **Para que serve**  
 Define manualmente o HTML interno de um bloco.
@@ -419,7 +501,7 @@ pop.html('header', '<h1>Novo título</h1>');
 
 ---
 
-### 17. `css(css)`
+### 22. `css(css)`
 
 **Para que serve**  
 Insere regras CSS diretamente no documento.
