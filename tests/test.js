@@ -10,6 +10,11 @@ class Fxtests {
     this.tests.push({ name, teste, resultEsperado });
   }
   
+  clear(){
+    console.clear('')
+    console.log('%cFxtests: tudo funcionando','color:lime;')
+  }
+  
   // Método para rodar todos os testes
   run() {
     for (let i = 0; i < this.tests.length; i++) {
@@ -112,7 +117,10 @@ fxtests.add({
       box: () => '<div class="box">Box</div>'
     });
     pop.init(['box']); // Certifique-se de que o box seja inicializado
-    pop.animar('box', { type: 'fade', duration: 500 });
+    pop.anime('#box', {
+  props: [{ transform: 'scale(1)' }, { transform: 'scale(1.2)' }],
+  duration: 500
+});
     const box = pop.id('box');
     return box !== null; // Verifique se o box foi manipulado
   },
@@ -126,7 +134,15 @@ fxtests.add({
     const pop = new Pop({
       box: () => '<div class="box">Box</div>'
     });
-    pop.mover('box', { vento: { ax: 2, delay: 30, maxX: 300 }, gravidade: { ay: 1, delay: 30 } });
+    pop.mover('#box', {
+  physics: {
+    ax: 2,        // Aceleração em X
+    ay: 1,        // Aceleração em Y
+    friction: 0.95, // Fricção (1 = sem perda de aceleração)
+    minX: 0, maxX: 300, // Limites em X
+    minY: 0, maxY: 500  // Limites em Y
+  }
+});
     const box = pop.id('box');
     return box !== null; // Espera-se que a física tenha manipulado o bloco
   },
@@ -223,6 +239,7 @@ fxtests.add({
 
 fxtests.run();
 document.body.innerHTML='';
+fxtests.clear();
 
 /*Esses testes abrangem diferentes
 aspectos da biblioteca pop.js,
