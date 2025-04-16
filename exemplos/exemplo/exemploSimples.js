@@ -27,7 +27,7 @@ App.contato = () => `
   </section>
   `;
 
-App.init(['container', 'header', 'home', 'painel',]);
+App.init(['container', 'header', 'home', 'painel', ]);
 
 //snippet
 /*App.evento('#btn', 'click', () => alert('It just works.'));
@@ -52,18 +52,18 @@ const timing = {
 };
 
 App.evento('#btn-home', 'click', () => {
-/*  App.init(['snippet']);
-  App.init(['snippet2'])*/
+  /*  App.init(['snippet']);
+    App.init(['snippet2'])*/
   App.remover('contato')
-   App.show(['home'])
-App.mover('#home', {
-  duration: 1200,
-//  x: (p) => Math.sin(p * Math.PI) * 200, // um leve bounce lateral
-  y: (p) => -Math.sin(p * Math.PI) * 50 // uma subida e descida suave
-});
+  App.show(['home'])
+  App.mover('#home', {
+    duration: 1200,
+    //  x: (p) => Math.sin(p * Math.PI) * 200, // um leve bounce lateral
+    y: (p) => -Math.sin(p * Math.PI) * 50 // uma subida e descida suave
+  });
   App.$$('home').animate(keyframes, timing).onfinish = () => {
-  console.log("Tudo feito, chefia!");
-};
+    console.log("Tudo feito, chefia!");
+  };
 });
 
 App.evento('#btn-contato', 'click', () => {
@@ -71,22 +71,22 @@ App.evento('#btn-contato', 'click', () => {
   App.remover('snippet2')*/
   App.remover('home')
   App.show(['contato']);
-App.mover('#contato', {
-  duration: 1000,
-  //x: (p) => Math.sin(p * Math.PI * 2) * 100,
-  y: (p) => Math.cos(p * Math.PI * 2) * 20
-});
-App.$$('contato').animate(keyframes, timing).onfinish = () => {
-  console.log("Tudo feito, chefia!");
-};
- /* App.animar("contato", {
-    keyframes: [
-      { filter: "brightness(1)" },
-      { filter: "brightness(2)" },
-      { filter: "brightness(1)" }
-    ],
-    options: { duration: 600, iterations: Infinity }
-  });*/
+  App.mover('#contato', {
+    duration: 1000,
+    //x: (p) => Math.sin(p * Math.PI * 2) * 100,
+    y: (p) => Math.cos(p * Math.PI * 2) * 20
+  });
+  App.$$('contato').animate(keyframes, timing).onfinish = () => {
+    console.log("Tudo feito, chefia!");
+  };
+  /* App.animar("contato", {
+     keyframes: [
+       { filter: "brightness(1)" },
+       { filter: "brightness(2)" },
+       { filter: "brightness(1)" }
+     ],
+     options: { duration: 600, iterations: Infinity }
+   });*/
   
   
   App.evento('#enviar', 'click', () => {

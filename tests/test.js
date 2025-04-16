@@ -2,51 +2,81 @@ class Fxtests {
   constructor() {
     this.tests = [];
     this.errors = {};
+    this.ok = true; // Começa presumindo que tudo vai dar certo
   }
   
-  // Método para adicionar um novo teste
+  // Adiciona um teste
   add({ name, teste, resultEsperado }) {
-    // Adiciona o teste à lista de testes
     this.tests.push({ name, teste, resultEsperado });
   }
   
-  clear(){
-    console.clear('')
-    console.log('%cFxtests: tudo funcionando','color:lime;')
-  }
-  
-  // Método para rodar todos os testes
+  // Executa todos os testes
   run() {
+    this.errors = {}; // limpa os erros anteriores
+    this.ok = true; // reset da flag ok
+    
     for (let i = 0; i < this.tests.length; i++) {
-      // Obtenha os valores do teste atual
       const { name, teste, resultEsperado } = this.tests[i];
-      const check = teste() === resultEsperado; // Verifica se o resultado é igual ao esperado
+      let resultado;
       
-      // Define se o teste passou ou falhou
-      const verifiqueCheck = check ? 'Fxtests:ok' : 'Fxtests:error';
-      
-      // Se falhou, registra o erro
-      if (!check) {
-        this.errors[i] = {
-          name,
-          result: teste(),
-          resultEsperado,
-          check: verifiqueCheck,
-        };
+      try {
+        resultado = teste(); // executa uma vez
+      } catch (e) {
+        resultado = `Erro: ${e.message}`;
+        this.ok = false;
+        this.errors[i] = { name, result: resultado, resultEsperado, check: 'Fxtests:exception' };
+        console.error(`${name}: Fxtests:exception`);
+        continue;
       }
       
-      // Exibe no console se o teste passou ou falhou
-      console.log(`${name}: ${verifiqueCheck}`);
+      const check = resultado === resultEsperado;
+      const status = check ? 'Fxtests:ok' : 'Fxtests:error';
+      
+      if (!check) {
+        this.ok = false;
+        this.errors[i] = { name, result: resultado, resultEsperado, check: status };
+      }
+      
+      console.log(`${name}: ${status}`);
     }
     
-    // Exibe todos os erros, caso haja
-    if (Object.keys(this.errors).length > 0) {
+    if (!this.ok) {
       console.log('\nErros encontrados:');
       console.table(this.errors);
     }
   }
-}
+  
+  // Relatório final e limpeza visual
+  clear() {
+    const elogios = [
+  "Fxtests: tudo funcionando — o bug te teme.",
+  "Fxtests: tudo funcionando — respira, só sucesso.",
+  "Fxtests: tudo funcionando — paz interior alcançada.",
+  "Fxtests: tudo funcionando — hoje o deploy vai.",
+  "Fxtests: tudo funcionando — nem o ChatGPT achou erro.",
+  "Fxtests: tudo funcionando — esse commit é histórico.",
+];
 
+const elogio = elogios[Math.floor(Math.random() * elogios.length)];
+    console.clear();
+    if (this.ok) {
+      setTimeout(() => console.log(`%c${elogio}`, 'color:lime;'), 200);
+
+      //setTimeout(() => console.log('%cFxtests: tudo funcionando', 'color:lime;'), 2000);
+    } else {
+      console.error('Fxtests: erros encontrados');
+      console.table(this.errors);
+    }
+  }
+  
+  // Método pra resetar tudo (tests + errors)
+  reset() {
+    this.tests = [];
+    this.errors = {};
+    this.ok = true;
+    console.log('%cFxtests: resetado', 'color:gray;');
+  }
+}
 const fxtests = new Fxtests();
 //Verificar se a classe Pop é instanciada corretamente e se os blocos são inicializados conforme o esperado.
 
@@ -239,7 +269,7 @@ fxtests.add({
 
 fxtests.run();
 document.body.innerHTML='';
-fxtests.clear();
+fxtests.clear()
 
 /*Esses testes abrangem diferentes
 aspectos da biblioteca pop.js,

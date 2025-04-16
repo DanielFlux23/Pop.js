@@ -16,7 +16,9 @@ export const App = new Pop({
     <p>A biblioteca leve e flexível para manipulação dinâmica do DOM, permitindo adicionar e atualizar blocos HTML de maneira simples e sem complicação.</p>
     <p>Use os botões de navegação para testar a troca de views sem recarregar a página.</p>
   </section>
-    <a href="https://github.com/DanielFlux23/Pop.js">github</githuba>
+  <footer>
+    <p>Feito por <a href="https://github.com/DanielFlux23">DanielFlux23</a></p>
+  </footer>
 
     `,
   
@@ -36,7 +38,9 @@ export const App = new Pop({
     <button id="enviar">Enviar</button>
     
     <div id="feedback"></div>
-  </section>`,
+  </section>
+  <a href="https://github.com/DanielFlux23/Pop.js">github</a>
+  `,
  snippet: () => `<button id="btn">Click me</button></br>
     <pre><code>
   App.evento('#snippet','click', () => alert('It just works.'));
