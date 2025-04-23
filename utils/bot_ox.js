@@ -1,16 +1,16 @@
 class Bot_0x {
   constructor() {
     this.text = ""
+    this.style="font-family: monospace; font-size: 16px; color: lime; background: rgba(0, 0, 0, 0.58); padding: 8px 12px; border-radius: 5px;";
   }
   
   log(text){
     console.log(
   "%c</0_0>: " + text,
-  "font-family: monospace; font-size: 16px; color: #00ffcc; background: rgba(0, 0, 0, 0.58); padding: 8px 12px; border-radius: 5px;"
-);
+this.style);
   }
   
-  help(){ return `
+  help(){ console.log(`%c
     === Comandos Pop.js ===
     - help: mostra esta ajuda
     - select <selector>: seleciona elementos do DOM
@@ -19,7 +19,7 @@ class Bot_0x {
     - html <selector>: mostra HTML interno
     - log <mensagem>: log com estilo Pop.js
     - github: abre o repositório do projeto
-  `}
+  `,this.style)}
   
   select(selector){
     document.querySelectorAll(selector)
@@ -52,9 +52,6 @@ html(selector){
   github(){window.open('https://github.com/DanielFlux23/Pop.js', '_blank')}
 }
 
-
 const bot_0x = new Bot_0x();
 
 bot_0x.log('digite bot_0x.help()')
-
-let obj = {};

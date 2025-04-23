@@ -1,80 +1,105 @@
 class Fxtests {
-  constructor() {
+  constructor(delay = 500) {
     this.tests = [];
     this.errors = {};
-    this.ok = true; // Começa presumindo que tudo vai dar certo
+    this.ok = true;
+    this.delay = delay;
   }
   
-  // Adiciona um teste
   add({ name, teste, resultEsperado }) {
     this.tests.push({ name, teste, resultEsperado });
   }
   
-  // Executa todos os testes
   run() {
-    this.errors = {}; // limpa os erros anteriores
-    this.ok = true; // reset da flag ok
+    this.errors = {};
+    this.ok = true;
     
-    for (let i = 0; i < this.tests.length; i++) {
-      const { name, teste, resultEsperado } = this.tests[i];
-      let resultado;
-      
-      try {
-        resultado = teste(); // executa uma vez
-      } catch (e) {
-        resultado = `Erro: ${e.message}`;
-        this.ok = false;
-        this.errors[i] = { name, result: resultado, resultEsperado, check: 'Fxtests:exception' };
-        console.error(`${name}: Fxtests:exception`);
-        continue;
-      }
-      
-      const check = resultado === resultEsperado;
-      const status = check ? 'Fxtests:ok' : 'Fxtests:error';
-      
-      if (!check) {
-        this.ok = false;
-        this.errors[i] = { name, result: resultado, resultEsperado, check: status };
-      }
-      
-      console.log(`${name}: ${status}`);
-    }
+    console.groupCollapsed('%c[ Fxtests - Execução iniciada ]', 'color: cyan; font-weight: bold;');
     
-    if (!this.ok) {
-      console.log('\nErros encontrados:');
-      console.table(this.errors);
+    this.tests.forEach(({ name, teste, resultEsperado }, index) => {
+    //  setTimeout(() => {
+        let resultado;
+        
+        try {
+          resultado = teste();
+        } catch (e) {
+          resultado = `Erro: ${e.message}`;
+          this.ok = false;
+          this.errors[index] = {
+            name,
+            result: resultado,
+            resultEsperado,
+            check: 'Exceção lançada',
+          };
+          
+          console.groupCollapsed(`%c${name}: EXCEPTION`, 'color: red; font-weight: bold;');
+          console.log('%cTipo de falha:', 'color: red;', 'Exceção');
+          console.log('%cErro:', 'color: red;', e.message);
+          console.groupEnd();
+          return;
+        }
+        
+        const passed = resultado === resultEsperado;
+        
+        if (!passed) {
+          this.ok = false;
+          this.errors[index] = {
+            name,
+            result: resultado,
+            resultEsperado,
+            check: 'Resultado inesperado',
+          };
+          
+          console.groupCollapsed(`%c${name}: FALHOU`, 'color: orange; font-weight: bold;');
+          console.log('%cTipo de falha:', 'color: orange;', 'Resultado inesperado');
+          console.log('%cEsperado:', 'color: lime;', resultEsperado);
+          console.log('%cObtido:', 'color: yellow;', resultado);
+          console.groupEnd();
+        } else {
+          console.log(`%c${name}: OK`, 'color: green; font-weight: bold;');
+        }
+        
+        if (index === this.tests.length - 1) {
+        // setTimeout(() => {
+            console.groupEnd();
+            this._resumoFinal();
+        //  }, this.delay);
+        }
+     // }, index * this.delay);
+    });
+  }
+  
+  _resumoFinal() {
+    if (this.ok) {
+      console.log('%c[ Fxtests - Todos os testes passaram ]', 'color: lime; font-weight: bold;');
+    } else {
+      console.groupCollapsed('%c[ Fxtests - Resumo de Falhas ]', 'color: red; font-weight: bold;');
+      Object.values(this.errors).forEach(({ name, result, resultEsperado, check }, i) => {
+        console.groupCollapsed(`${i + 1}. ${name}`);
+        console.log('%cTipo:', 'color: red;', check);
+        console.log('%cEsperado:', 'color: lime;', resultEsperado);
+        console.log('%cObtido:', 'color: yellow;', result);
+        console.groupEnd();
+      });
+      console.groupEnd();
     }
   }
   
-  // Relatório final e limpeza visual
   clear() {
-    const elogios = [
-  "Fxtests: tudo funcionando — o bug te teme.",
-  "Fxtests: tudo funcionando — respira, só sucesso.",
-  "Fxtests: tudo funcionando — paz interior alcançada.",
-  "Fxtests: tudo funcionando — hoje o deploy vai.",
-  "Fxtests: tudo funcionando — nem o ChatGPT achou erro.",
-  "Fxtests: tudo funcionando — esse commit é histórico.",
-];
-
-const elogio = elogios[Math.floor(Math.random() * elogios.length)];
     console.clear();
     if (this.ok) {
-      setTimeout(() => console.log(`%c${elogio}`, 'color:lime;'), 200);
-
-      //setTimeout(() => console.log('%cFxtests: tudo funcionando', 'color:lime;'), 2000);
+      console.log('%cFxtests: Tudo em ordem. Pode dormir tranquilo.', 'color: green; font-weight: bold;');
     } else {
-      console.error('Fxtests: erros encontrados');
-      console.table(this.errors);
+      console.error('%cFxtests: Ainda tem erro te olhando feio.', 'color: red; font-weight: bold;');
+      this._resumoFinal();
     }
   }
   
-  // Método pra resetar tudo (tests + errors)
   reset() {
     this.tests = [];
     this.errors = {};
     this.ok = true;
-    console.log('%cFxtests: resetado', 'color:gray;');
+    console.log('%cFxtests: Resetado. Que comece o caos novamente.', 'color: gray; font-style: italic;');
   }
 }
 const fxtests = new Fxtests();
@@ -269,7 +294,7 @@ fxtests.add({
 
 fxtests.run();
 document.body.innerHTML='';
-fxtests.clear()
+//fxtests.clear()
 
 /*Esses testes abrangem diferentes
 aspectos da biblioteca pop.js,
