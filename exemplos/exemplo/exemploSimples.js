@@ -1,5 +1,5 @@
 import { App } from '/exemplos/exemplo/app.js';
-
+const start = performance.now();
 App.home = () => `
   <section id="home">
     <h2>Bem-vindo ao Pop.js</h2>
@@ -29,14 +29,6 @@ App.contato = () => `
 
 App.init(['container', 'header', 'home', 'painel', ]);
 
-//snippet
-/*App.evento('#btn', 'click', () => alert('It just works.'));
-//snippet2
-let count = 0;
-App.evento('#incrementar', 'click', () => {
-  count++;
-  $('contador').innerHTML = count;
-});*/
 
 const keyframes = [
   //{ left: '200px', top: '150px', width: '100px', height: '100px', opacity: 1, borderRadius: '0%', offset: 0 },
@@ -52,13 +44,12 @@ const timing = {
 };
 
 App.evento('#btn-home', 'click', () => {
-  /*  App.init(['snippet']);
-    App.init(['snippet2'])*/
+
   App.remover('contato')
   App.show(['home'])
   App.mover('#home', {
     duration: 1200,
-    //  x: (p) => Math.sin(p * Math.PI) * 200, // um leve bounce lateral
+      x: (p) => Math.sin(p * Math.PI) * 10, // um leve bounce lateral
     y: (p) => -Math.sin(p * Math.PI) * 50 // uma subida e descida suave
   });
   App.$$('home').animate(keyframes, timing).onfinish = () => {
@@ -79,20 +70,11 @@ App.evento('#btn-contato', 'click', () => {
   App.$$('contato').animate(keyframes, timing).onfinish = () => {
     console.log("Tudo feito, chefia!");
   };
-  /* App.animar("contato", {
-     keyframes: [
-       { filter: "brightness(1)" },
-       { filter: "brightness(2)" },
-       { filter: "brightness(1)" }
-     ],
-     options: { duration: 600, iterations: Infinity }
-   });*/
-  
   
   App.evento('#enviar', 'click', () => {
-    const nome = $('nome').value;
-    const email = $('email').value;
-    const msg = $('mensagem').value;
+    const nome = App.$('#nome').value;
+    const email = App.$('#email').value;
+    const msg = App.$('#mensagem').value;
     
     if (nome && email && msg) {
       fetch('http://localhost:3000/api/contato', {
@@ -106,10 +88,10 @@ App.evento('#btn-contato', 'click', () => {
         })
         .catch(err => {
           console.error(err);
-          $('feedback').textContent = 'Erro ao enviar mensagem.';
+          App.$('#feedback').textContent = 'Erro ao enviar mensagem.';
         });
     } else {
-      $('feedback').textContent = 'Preencha todos os campos.';
+      App.$('#feedback').textContent = 'Preencha todos os campos.';
     }
   });
 });
@@ -251,3 +233,5 @@ code.string { color: #ce9178; }
 code.function { color: #dcdcaa; }
 code.keyword { color: #c586c0; }
 `);
+const end = performance.now();
+console.log(`Demorou ${(end - start).toFixed(2)} ms`);
