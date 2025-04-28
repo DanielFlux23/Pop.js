@@ -1,4 +1,4 @@
-class Pop {
+class TitanDOM {
   constructor(blocos = {}, opens = []) {
     this.blocos = blocos; // Mapeamento de nomes para funções de renderização
     this.chaves = Object.keys(blocos); // Todas as chaves iniciais
@@ -8,7 +8,7 @@ class Pop {
     this.configAnimacoes = {animacoes:[],timing:{}}; // Gerencia animações em fila
     
     // Inicializa blocos, dependendo do valor de 'opens'
-    this.init(opens === 'initPop' ? this.chaves : opens);
+    this.init(opens === 'initTitanDOM' ? this.chaves : opens);
     
     return this;
   }

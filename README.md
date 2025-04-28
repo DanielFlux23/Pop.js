@@ -1,10 +1,10 @@
-# Pop.js
+# TitanDom
 
-**Pop.js** é uma biblioteca ultra-leve e flexível para manipulação dinâmica do DOM, permitindo adicionar e atualizar blocos HTML de maneira simples e sem complicação.
+**TitanDom** é uma biblioteca ultra-leve e flexível para manipulação dinâmica do DOM, permitindo adicionar e atualizar blocos HTML de maneira simples e sem complicação.
 
 > componentes reutilizáveis e zero dependências.
 Ideal para quem quer montar interfaces interativas sem frameworks pesados.
-Com sintaxe fluida, inicialização automática e suporte a encadeamento, Pop.js é perfeita pra projetos simples que precisam de velocidade e eficiência.
+Com sintaxe fluida, inicialização automática e suporte a encadeamento, TitanDom é perfeito pra projetos simples que precisam de velocidade e eficiência.
 
 #  Características
 
@@ -14,7 +14,7 @@ Com sintaxe fluida, inicialização automática e suporte a encadeamento, Pop.js
 - Encadeamento – O retorno this permite chamadas encadeadas, algo que melhora a fluidez do código.
 
 ```markdown
-| **Aspecto**              | **Pop.js**                                  | **jQuery**                                   | **React**                                         |
+| **Aspecto**              | **TitanDom**                                  | **jQuery**                                   | **React**                                         |
 |--------------------------|---------------------------------------------|----------------------------------------------|--------------------------------------------------|
 | **Propósito**            | Manipulação DOM moderna e simplificada      | Manipulação DOM imperativa (raiz, 2006)      | Criação de interfaces reativas (SPA/componentes) |
 | **Paradigma**            | Declarativo e modular                       | Imperativo                                   | Declarativo, baseado em componentes              |
@@ -34,16 +34,16 @@ Com sintaxe fluida, inicialização automática e suporte a encadeamento, Pop.js
 
 veja um exemplo em:
 
-<a href="https://popjs.netlify.app/">clique aqui para um exemplo</a>
+<a href="https://titandom.netlify.app/">clique aqui para um exemplo</a>
 
 #  Instalação
 
 Usando um arquivo <script>:
 
-Inclua o arquivo pop.js no seu projeto.
+Inclua o arquivo TitanDom no seu projeto.
 
 ```javascript
-<script src="https://cdn.jsdelivr.net/gh/DanielFlux23/Pop.js/src/core/pop.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/DanielFlux23/TitanDom/src/core/TitanDom"></script>
 ```
 
 
@@ -51,25 +51,25 @@ Ou, se preferir clone o repositório
 
 e adicione isso ao seu html
 
-`<script src="/src/pop.js"></script>`
+`<script src="/src/TitanDom"></script>`
 
 ---
 
 #### 1. constructor(blocos = {}, opens = [])
 
 **Para que serve**  
-Inicializa a instância da classe Pop. Pode também já iniciar os blocos definidos.
+Inicializa a instância da classe TitanDom Pode também já iniciar os blocos definidos.
 
 **Argumentos**  
 - `blocos`: Objeto com chaves representando blocos e valores sendo funções que retornam HTML ou elementos.  
-- `opens`: Array de blocos a serem inseridos no DOM automaticamente. Se `opens === 'initPop'`, todos os blocos serão iniciados.
+- `opens`: Array de blocos a serem inseridos no DOM automaticamente. Se `opens === 'initTitanDom'`, todos os blocos serão iniciados.
 
 **Retorno**  
-Instância da classe `Pop`.
+Instância da classe `TitanDom`.
 
 **Exemplo**
 ```javascript
-const pop = new Pop({
+const tiDom = new TitanDom({
   header: () => '<h1>Hello</h1>'
 }, ['header']);
 ```
@@ -89,11 +89,11 @@ Inicializa e insere no DOM os blocos especificados, se ainda não existirem.
 - `target` (opcional): Elemento ou seletor CSS onde o bloco será inserido. Por padrão, é document.body.
 
 **Retorno**  
-Instância da classe `Pop`.
+Instância da classe `TitanDom`.
 
 **Exemplo**
 ```javascript
-pop.init(['card'], {
+titanDom.init(['card'], {
   data: { nome: 'Dani' },
   text: 'Substituir HTML',
   target: '#container',
@@ -119,7 +119,7 @@ Conteúdo HTML ou resultado da função.
 
 **Exemplo**
 ```javascript
-const html = pop.id('header');
+const html = titanDom.id('header');
 ```
 
 ---
@@ -133,11 +133,11 @@ Atualiza o conteúdo dos blocos renderizados. Inicializa se não existir.
 - `blocos`: (Opcional) Array com nomes dos blocos. Se omitido, atualiza todos.
 
 **Retorno**  
-Instância da classe `Pop`.
+Instância da classe `TitanDom`.
 
 **Exemplo**
 ```javascript
-pop.show(['header']);
+titanDom.show(['header']);
 ```
 
 ---
@@ -159,7 +159,7 @@ Objeto `Animation` ou função encadeável.
 
 **Exemplo**
 ```javascript
-pop.anime('#box', {
+titanDom.anime('#box', {
   props: [{ transform: 'scale(1)' }, { transform: 'scale(1.2)' }],
   duration: 500
 });
@@ -221,7 +221,7 @@ Objeto com métodos de controle:
 
 **1. Modo física:**
 ```javascript
-pop.mover('#box', {
+titanDom.mover('#box', {
   physics: {
     ax: 2,
     ay: 1,
@@ -234,7 +234,7 @@ pop.mover('#box', {
 
 **2. Modo animação:**
 ```javascript
-pop.mover('#box', {
+titanDom.mover('#box', {
   duration: 4000,
   x: (p) => Math.sin(p * Math.PI * 2) * 150,
   y: (p) => Math.cos(p * Math.PI * 2) * 150
@@ -255,7 +255,7 @@ Adiciona ouvintes de eventos em elementos DOM.
 
 **Exemplo**
 ```javascript
-pop.evento('#btn', 'click', () => alert('Clicado!'));
+titanDom.evento('#btn', 'click', () => alert('Clicado!'));
 ```
 
 ---
@@ -270,7 +270,7 @@ Remove elementos do DOM por id.
 
 **Exemplo**
 ```javascript
-pop.remover('box');
+titanDom.remover('box');
 ```
 
 ---
@@ -285,7 +285,7 @@ Adiciona dinamicamente um novo bloco.
 - `callback`: Função que retorna HTML ou elemento.
 
 **Retorno**  
-Instância da classe `Pop`.
+Instância da classe `TitanDom`.
 
 ---
 
@@ -295,13 +295,13 @@ Instância da classe `Pop`.
 Cria uma variável observável. Executa um callback sempre que seu valor mudar.
 
 **Argumentos**  
-- `nomeVariavel`: Nome da variável dentro de `pop.set`.  
+- `nomeVariavel`: Nome da variável dentro de `titanDom.set`.  
 - `callback`: Função a ser chamada no `set`.
 
 **Exemplo**
 ```javascript
-pop.setVar('contador', () => console.log('Mudou!'));
-pop.set.contador = 42;
+titanDom.setVar('contador', () => console.log('Mudou!'));
+titanDom.set.contador = 42;
 ```
 
 ---
@@ -320,10 +320,10 @@ Nenhum.
 
 **Exemplo**
 ```javascript
-pop.watch('titulo', novo => {
+titanDom.watch('titulo', novo => {
   console.log('Novo título:', novo);
 });
-pop.titulo = 'Bem-vindo!';
+titanDom.titulo = 'Bem-vindo!';
 ```
 
 ---
@@ -399,7 +399,7 @@ Cria uma cópia de um bloco existente.
 
 **Exemplo**
 ```javascript
-pop.clone('card', 'cardNovo');
+titanDom.clone('card', 'cardNovo');
 ```
 
 ---
@@ -411,7 +411,7 @@ Atalhos para `document.querySelector` e `getElementById`.
 
 **Exemplo**
 ```javascript
-pop.$('#minhaDiv').innerHTML = 'Oi!';
+titanDom.$('#minhaDiv').innerHTML = 'Oi!';
 ```
 
 ---
@@ -423,7 +423,7 @@ Retorna o objeto `style` de um bloco.
 
 **Exemplo**
 ```javascript
-pop.style('box').backgroundColor = 'red';
+titanDom.style('box').backgroundColor = 'red';
 ```
 
 ### 18. `grupe(nome, blocos)`
@@ -436,11 +436,11 @@ Cria grupos de blocos que podem ser reutilizados juntos.
 - `blocos`: Array de nomes de blocos a serem agrupados.
 
 **Retorno**  
-Instância da classe `Pop`.
+Instância da classe `TitanDom`.
 
 **Exemplo**
 ```javascript
-pop.grupe('layout', ['header', 'main', 'footer']);
+titanDom.grupe('layout', ['header', 'main', 'footer']);
 ```
 
 ---
@@ -458,7 +458,7 @@ Nenhum.
 
 **Exemplo**
 ```javascript
-pop.absoluteExiber(['main']);
+titanDom.absoluteExiber(['main']);
 ```
 
 ---
@@ -476,7 +476,7 @@ Cria uma variável reativa e conecta sua mudança automática à atualização d
 
 **Exemplo**
 ```javascript
-const setContador = pop.setShow('contador');
+const setContador = titanDom.setShow('contador');
 setContador.contador++; // Atualiza o bloco 'contador' na tela
 ---
 
@@ -490,11 +490,11 @@ Define manualmente o HTML interno de um bloco.
 - `html`: String com conteúdo HTML.
 
 **Retorno**  
-Instância da classe `Pop`.
+Instância da classe `TitanDom`.
 
 **Exemplo**
 ```javascript
-pop.html('header', '<h1>Novo título</h1>');
+titanDom.html('header', '<h1>Novo título</h1>');
 ```
 
 ---
@@ -512,7 +512,7 @@ Nenhum.
 
 **Exemplo**
 ```javascript
-pop.css('body { background: #000; color: #fff; }');
+titanDom.css('body { background: #000; color: #fff; }');
 ```
 
 ---
@@ -529,7 +529,7 @@ pop.css('body { background: #000; color: #fff; }');
 
 - **Chave com `&`**: Indica que o bloco será clonado automaticamente.  
   ```javascript
-  pop.init(['card&']); // gera 'card1', 'card2'...
+  titanDom.init(['card&']); // gera 'card1', 'card2'...
   ```
 
 ---
@@ -549,20 +549,20 @@ Conteúdo de math + 'Sim' ou 'Não'
 
 ## Exemplo Completo
 ```html
-<script src="pop.js"></script>
+<script src="titanDom.js"></script>
 <script>
-const pop = new Pop({
-  header: () => '<h1>Pop.js</h1>',
+const titanDom = new TitanDom({
+  header: () => '<h1>TitanDom</h1>',
   content: () => '<p>Conteúdo inicial</p>',
   $referencia: () => 'header'
 }, ['header']);
 
-setTimeout(() => pop.show(['content']), 2000);
+setTimeout(() => titanDom.show(['content']), 2000);
 </script>
 ``` 
 ## 🧑‍💻 Contribuição
 
-Se você quiser contribuir com o Pop.js, faça um fork deste repositório, faça suas alterações e envie um pull request. Fique à vontade para sugerir melhorias, novos métodos ou até funcionalidades incríveis que você acha que o Pop.js deveria ter!
+Se você quiser contribuir com o TitanDom, faça um fork deste repositório, faça suas alterações e envie um pull request. Fique à vontade para sugerir melhorias, novos métodos ou até funcionalidades incríveis que você acha que o TitanDom deveria ter!
 
 ## 📄 Licença
 
@@ -573,10 +573,11 @@ Este projeto é licenciado sob a MIT License – veja o arquivo LICENSE para mai
 
 > “Criado por pura preguiça de aprender React. E funcionou.”
 
-## 🍿 Por que "Pop"?
+## 🍿 Por que "TitanDom"?
 
-O nome "Pop" reflete algo leve, dinâmico e rápido, assim como a biblioteca. É uma forma simples e rápida de gerenciar blocos de conteúdo no seu site.
+O nome "TitanDom" reflete como um titã que você domou pra construir algo colossal.
+
 
 ---
 
-Boa sorte com o Pop! 😎
+Boa sorte com o TitanDom! 😎

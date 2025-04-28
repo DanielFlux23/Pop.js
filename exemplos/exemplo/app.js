@@ -1,10 +1,10 @@
 
-export const App = new Pop({
+export const App = new TitanDOM({
   container: () => `<main id="app"></main>`,
   
   header: () => `
     <header>
-      <h1>Pop.js</h1>
+      <h1>TitanDOM</h1>
       <nav>
         <button id="btn-home">Home</button>
         <button id="btn-contato">Contato</button>

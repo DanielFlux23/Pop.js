@@ -1,14 +1,14 @@
 /*data.contador=0
-const pop = new Pop({
+const titanDOM = new TitanDOM({
   contador:() => `${data.contador}`,
   click:() => `<button id="btn">+1</button>`
 },['contador','click'])
 
-const setContador = pop.setVar('contador',(nova) => {
-  pop.show(['contador'])
+const setContador = titanDOM.setVar('contador',(nova) => {
+  titanDOM.show(['contador'])
 })
 
-pop.evento('#btn','click',() => {
+titanDOM.evento('#btn','click',() => {
   setContador.contador++;
 })
 
@@ -16,17 +16,17 @@ pop.evento('#btn','click',() => {
 
 
 */
-// popjs
+// titanDOMjs
 data = { contador: 0 }
 
-const pop = new Pop({
+const titanDOM = new TitanDOM({
   contador: () => `${data.contador}`,
   click: () => `<button id="btn">+1</button>`
 }, ['click'])
 
 
-const setContador = pop.setShow('contador')
+const setContador = titanDOM.setShow('contador')
 
-pop.evento('#btn', 'click', () => {
+titanDOM.evento('#btn', 'click', () => {
   setContador.contador++;
   })

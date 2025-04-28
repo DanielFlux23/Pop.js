@@ -103,12 +103,12 @@ class Fxtests {
   }
 }
 const fxtests = new Fxtests();
-//Verificar se a classe Pop é instanciada corretamente e se os blocos são inicializados conforme o esperado.
+//Verificar se a classe TitanDOM é instanciada corretamente e se os blocos são inicializados conforme o esperado.
 
 fxtests.add({
   name: 'Testando o constructor',
   teste: () => {
-    const pop = new Pop({
+    const pop = new TitanDOM({
       header: () => '<h1>Test</h1>'
     }, ['header']);
     return pop.id('header') === '<h1>Test</h1>';
@@ -121,14 +121,14 @@ fxtests.add({
 fxtests.add({
   name: 'Testando init',
   teste: () => {
-    const pop = new Pop({
+    const titanDOM = new TitanDOM({
       card: () => '<div class="card">Card</div>'
     });
-    pop.init(['card'], {
+    titanDOM.init(['card'], {
       text: 'Alterado!',
       onRender: (el) => el.style.border = '2px dashed blue'
     });
-    const card = pop.$$('card').attributes;
+    const card = titanDOM.$$('card').attributes;
     
     return card.id.value === 'card'&& card.style.value === 'border: 2px dashed blue;';//'<div id="card" style="border: 2px dashed blue;">Alterado!</div>' ;//&& card.style.border === '2px dashed blue';
   },
@@ -140,7 +140,7 @@ fxtests.add({
 fxtests.add({
   name: 'Testando id',
   teste: () => {
-    const pop = new Pop({
+    const pop = new TitanDOM({
       header: () => '<h1>Header</h1>'
     });
     return pop.id('header') === '<h1>Header</h1>';
@@ -153,7 +153,7 @@ fxtests.add({
 fxtests.add({
   name: 'Testando show',
   teste: () => {
-    const pop = new Pop({
+    const pop = new TitanDOM({
       header: () => '<h1>Header</h1>',
       footer: () => '<footer>Footer</footer>'
     });
@@ -168,7 +168,7 @@ fxtests.add({
 fxtests.add({
   name: 'Testando animar',
   teste: () => {
-    const pop = new Pop({
+    const pop = new TitanDOM({
       box: () => '<div class="box">Box</div>'
     });
     pop.init(['box']); // Certifique-se de que o box seja inicializado
@@ -186,7 +186,7 @@ fxtests.add({
 fxtests.add({
   name: 'Testando mover',
   teste: () => {
-    const pop = new Pop({
+    const pop = new TitanDOM({
       box: () => '<div class="box">Box</div>'
     });
     pop.mover('#box', {
@@ -209,7 +209,7 @@ fxtests.add({
 fxtests.add({
   name: 'Testando evento',
   teste: () => {
-    const pop = new Pop({
+    const pop = new TitanDOM({
       btn: () => '<button id="btn">Click me</button>'
     });
     pop.init(['btn']); // Garanta que o botão seja inserido no DOM antes do evento
@@ -226,7 +226,7 @@ fxtests.add({
 fxtests.add({
   name: 'Testando remover',
   teste: () => {
-    const pop = new Pop({
+    const pop = new TitanDOM({
       box: () => '<div id="box">Box</div>'
     });
     pop.init(['box']); // Inicializa o bloco 'box'
@@ -242,7 +242,7 @@ fxtests.add({
 fxtests.add({
   name: 'Testando add',
   teste: () => {
-    const pop = new Pop({});
+    const pop = new TitanDOM({});
     pop.add('newBlock', () => '<div>New Block</div>');
     return pop.id('newBlock') === '<div>New Block</div>';
   },
@@ -254,7 +254,7 @@ fxtests.add({
 fxtests.add({
   name: 'Testando setVar',
   teste: () => {
-    const pop = new Pop({});
+    const pop = new TitanDOM({});
     let contadorChanged = false;
    let setContador = pop.setVar('contador', () => contadorChanged = true);
     setContador.contador = 42;
@@ -268,7 +268,7 @@ fxtests.add({
 fxtests.add({
   name: 'Testando clone',
   teste: () => {
-    const pop = new Pop({
+    const pop = new TitanDOM({
       card: () => '<div class="card">Card</div>'
     });
     pop.clone('card', 'cardClone');
@@ -282,7 +282,7 @@ fxtests.add({
 fxtests.add({
   name: 'Testando $ e $$',
   teste: () => {
-    const pop = new Pop({
+    const pop = new TitanDOM({
       div: () => '<div id="minhaDiv">Conteúdo</div>'
     },['div']);
     const div = pop.$('#minhaDiv');
