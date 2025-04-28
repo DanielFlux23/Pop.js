@@ -256,8 +256,8 @@ fxtests.add({
   teste: () => {
     const pop = new Pop({});
     let contadorChanged = false;
-    pop.setVar('contador', () => contadorChanged = true);
-    pop.set.contador = 42;
+   let setContador = pop.setVar('contador', () => contadorChanged = true);
+    setContador.contador = 42;
     return contadorChanged === true;
   },
   resultEsperado: true

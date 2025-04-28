@@ -99,31 +99,37 @@ class Pop {
   }
   
   setVar(nomeVariavel, callback) {
-    Object.defineProperty(this.set, nomeVariavel, {
-      get() {
-        return this._valor;
-      },
-      set(novoValor) {
-        console.log([nomeVariavel])
-        //[nomeVariavel]=this.set[nomeVariavel]
-        callback()
-      }
-    });
-    return this.set;
+const proxy = new Proxy(data, {
+  get(target, prop) {
+    //console.log(`Acesso a propriedade "${prop}"`);
+    return target[prop];
+  },
+  set(target, prop, value) {
+  //  console.log(`Mudando "${prop}" para "${value}"`);
+    target[prop] = value;
+    callback(value)
+    return true;
+  }
+});
+
+    return proxy;
   }
   
   setShow(nomeVariavel, blocos) {
-    const mythis = this;
-    
-    Object.defineProperty(this.set, nomeVariavel, {
-      get() {
-        return this._valor;
-      },
-      set(novoValor) {
-        console.log(mythis)
-        // mythis.show([blocos])
-      }
-    });
+    const chamarShow = (bloco) => this.show([bloco]);
+    const proxy = new Proxy(data, {
+  get(target, prop) {
+    //console.log(`Acesso a propriedade "${prop}"`);
+    return target[prop];
+  },
+  set(target, prop, value) {
+    //  console.log(`Mudando "${prop}" para "${value}"`);
+    target[prop] = value;
+chamarShow(nomeVariavel)
+    return true;
+  }
+});
+return proxy;
   }
   
   watch(prop, callback) {
@@ -413,4 +419,8 @@ document.head.appendChild(styleTag);
     
     return true;
   }
+}
+
+let data = {
+  
 }

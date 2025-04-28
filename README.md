@@ -463,23 +463,21 @@ pop.absoluteExiber(['main']);
 
 ---
 
-### 20. `setShow(nomeVariavel, blocos)`
+### 20. `setShow(nomeVariavel)`
 
 **Para que serve**  
-Exibe blocos automaticamente sempre que a variável observável associada muda de valor.
+Cria uma variável reativa e conecta sua mudança automática à atualização dos blocos associados.
 
 **Argumentos**  
-- `nomeVariavel`: Nome da variável criada via `setVar`.  
-- `blocos`: Array com nomes dos blocos a serem exibidos.
+- `nomeVariavel`: Nome do bloco que será atualizado quando o valor da variável mudar.
 
 **Retorno**  
-Nenhum.
+- Um objeto onde a propriedade correspondente (`nomeVariavel`) pode ser alterada diretamente para disparar a atualização.
 
 **Exemplo**
 ```javascript
-pop.setShow('visivel', ['modal']);
-```
-
+const setContador = pop.setShow('contador');
+setContador.contador++; // Atualiza o bloco 'contador' na tela
 ---
 
 ### 21. `html(bloco, html)`
