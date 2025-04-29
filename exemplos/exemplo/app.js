@@ -4,7 +4,8 @@ export const App = new TitanDOM({
   
   header: () => `
     <header>
-      <h1>TitanDOM</h1>
+    <img src="/assets/logo4_29_135021.png" alt="titanDom" width="100px">      
+      <h4>TitanDOM</h4>
       <nav>
         <button id="btn-home">Home</button>
         <button id="btn-contato">Contato</button>

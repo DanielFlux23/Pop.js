@@ -108,7 +108,8 @@ App.css(`
 
 body {
   background-color: #f4f4f4;
-  color: #333;
+  background:black;
+  color: white;
   line-height: 1.6;
 }
 
@@ -138,7 +139,7 @@ nav {
 
 nav button {
   background-color: #61dafb;
-  background:#F00202;
+  
   border: none;
   padding: 10px 20px;
   cursor: pointer;
@@ -154,15 +155,15 @@ nav button:hover {
 
 section {
   margin-top: 30px;
-  background: white;
+  background: black;
   padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(255, 255, 255, 0.28);
 }
 
 section h2 {
   margin-bottom: 15px;
-  color: #20232a;
+  color: #272F89;
 }
 
 input[type="text"],
@@ -171,8 +172,9 @@ textarea {
   width: 100%;
   padding: 10px;
   margin-bottom: 15px;
-  border: 1px solid #ccc;
+  border: 2px solid green;
   border-radius: 4px;
+  background:black;
 }
 
 button#enviar {
@@ -199,7 +201,7 @@ button#enviar:hover {
 a[href*="github"] {
   display: inline-block;
   margin-top: 20px;
-  color: #0366d6;
+  color: green;
   text-decoration: none;
   font-weight: bold;
 }
