@@ -138,6 +138,7 @@ nav {
 
 nav button {
   background-color: #61dafb;
+  background:#F00202;
   border: none;
   padding: 10px 20px;
   cursor: pointer;
