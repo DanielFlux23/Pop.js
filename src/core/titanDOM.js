@@ -230,6 +230,24 @@ mount(nome, target, props = {}) {
    player.onfinish = config.onfinish || null;
    return player;
  }  
+ 
+  music({
+  freq,
+  oscType = 'sine',
+  duracao = 1
+}) {
+  const audioCtx = new AudioContext();
+  
+  const osc = audioCtx.createOscillator();
+  osc.type = oscType;
+  osc.frequency.value = freq;
+  const gain = audioCtx.createGain();
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+  
+  osc.start();
+  osc.stop(audioCtx.currentTime + duracao);
+}
   
 html(bloco,html){
   this.$('#'+bloco).innerHTML=html;html
